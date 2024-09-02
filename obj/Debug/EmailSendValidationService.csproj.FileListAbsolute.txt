@@ -1,0 +1,15 @@
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.csproj.AssemblyReference.cache
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.csproj.CoreCompileInputs.cache
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\EmailSendValidationService.exe.config
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\EmailSendValidationService.exe
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\EmailSendValidationService.pdb
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\Miharu.Imaging.DataAccess.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\Miharu.MailSender.DataAccess.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\Miharu.Security.DataAccess.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\SLYG.Data.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\bin\Debug\Slyg.Tools.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSen.01C00F7F.Up2Date
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.exe
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.pdb
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.ProjectInstaller.resources
+C:\Users\duvan.castro\source\repos\MailSenderSolution\EmailSendValidationService\obj\Debug\EmailSendValidationService.csproj.GenerateResource.cache
