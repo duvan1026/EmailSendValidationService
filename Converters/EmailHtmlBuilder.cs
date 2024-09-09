@@ -21,92 +21,98 @@ namespace ServiceEmailSendValidation.Converters
             this.emailFrom = emailFrom;
             this.emailSendDate = fechaActual.ToString("dddd, d 'de' MMMM 'de' yyyy HH:mm", cultura);
             this.emailAddress = emailAddress;
-            this.emailCC_CCO = emailCC_CCO;
+            this.emailCC_CCO = emailCC_CCO.Trim();  // Elimina los espacios al inicio y al final
             this.emailSubject = emailSubject;
             this.emailMessage = emailMessage;
         }
 
         public string GenerateHtml()
         {
-            return $@"
-<!DOCTYPE html>
-<html lang='es'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Detalles del Correo Electrónico</title>
-    <style>
-        body {{
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }}
-        .container {{
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }}
-        .header {{
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }}
-        .section {{
-            margin-bottom: 5px;
-        }}
-        .section strong {{
-            margin-right: 5px; /* Espacio entre el título y el valor */
-            //display: block;
-            margin-bottom: 5px;
-            //font-size: 16px;
-        }}
-        .section p {{
-            display: inline;
-            margin: 0;
-            font-size: 14px;
-            //flex: 1; /* Esto asegura que el texto se alinee a la derecha del encabezado */
-        }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            <strong>Asunto:</strong> {emailSubject}
-        </div>
-        <div class='section'>
-            <strong>De:</strong>
-            <p>{emailFrom}</p>
-        </div>
-        <div class='section'>
-            <strong>Enviado:</strong>
-            <p>{emailSendDate}</p>
-        </div>
-        <div class='section'>
-            <strong>Para:</strong>
-            <p>{emailAddress}</p>
-        </div>
-        <div class='section'>
-            <strong>CC y CCO:</strong>
-            <p>{emailCC_CCO}</p>
-        </div>
-        <div class='section'>
-            <strong>Asunto:</strong>
-            <p>{emailSubject}</p>
-        </div>
-        <div class='section'>
-            <br>
-            <br>
-            <p>{emailMessage}</p>
-        </div>
-    </div>
-</body>
-</html>";
+            var sb = new StringBuilder();
+
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang='es'>");
+            sb.AppendLine("<head>");
+            sb.AppendLine("    <meta charset='UTF-8'>");
+            sb.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+            sb.AppendLine("    <title>Detalles del Correo Electrónico</title>");
+            sb.AppendLine("    <style>");
+            sb.AppendLine("        body {");
+            sb.AppendLine("            font-family: Arial, sans-serif;");
+            sb.AppendLine("            margin: 0;");
+            sb.AppendLine("            padding: 20px;");
+            sb.AppendLine("            color: #333;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        .container {");
+            sb.AppendLine("            max-width: 800px;");
+            sb.AppendLine("            margin: auto;");
+            sb.AppendLine("            padding: 20px;");
+            sb.AppendLine("            border: 1px solid #ddd;");
+            sb.AppendLine("            border-radius: 8px;");
+            sb.AppendLine("            background-color: #f9f9f9;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        .header {");
+            sb.AppendLine("            font-size: 24px;");
+            sb.AppendLine("            font-weight: bold;");
+            sb.AppendLine("            margin-bottom: 10px;");
+            sb.AppendLine("            border-bottom: 2px solid #ddd;");
+            sb.AppendLine("            padding-bottom: 10px;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        .section {");
+            sb.AppendLine("            margin-bottom: 5px;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        .section strong {");
+            sb.AppendLine("            margin-right: 5px;");
+            sb.AppendLine("            margin-bottom: 5px;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        .section p {");
+            sb.AppendLine("            display: inline;");
+            sb.AppendLine("            margin: 0;");
+            sb.AppendLine("            font-size: 14px;");
+            sb.AppendLine("        }");
+            sb.AppendLine("    </style>");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            sb.AppendLine("    <div class='container'>");
+            sb.AppendLine("        <div class='header'>");
+            sb.AppendLine($"            <strong>Asunto:</strong> {emailSubject}");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("        <div class='section'>");
+            sb.AppendLine($"            <strong>De:</strong>");
+            sb.AppendLine($"            <p>{emailFrom}</p>");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("        <div class='section'>");
+            sb.AppendLine($"            <strong>Enviado:</strong>");
+            sb.AppendLine($"            <p>{emailSendDate}</p>");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("        <div class='section'>");
+            sb.AppendLine($"            <strong>Para:</strong>");
+            sb.AppendLine($"            <p>{emailAddress}</p>");
+            sb.AppendLine("        </div>");
+
+            // Conditionally add the CC and CCO section
+            if (!string.IsNullOrEmpty(emailCC_CCO))
+            {
+                sb.AppendLine("        <div class='section'>");
+                sb.AppendLine($"            <strong>CC y CCO:</strong>");
+                sb.AppendLine($"            <p>{emailCC_CCO}</p>");
+                sb.AppendLine("        </div>");
+            }
+
+            sb.AppendLine("        <div class='section'>");
+            sb.AppendLine($"            <strong>Asunto:</strong>");
+            sb.AppendLine($"            <p>{emailSubject}</p>");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("        <div class='section'>");
+            sb.AppendLine("            <br>");
+            sb.AppendLine("            <br>");
+            sb.AppendLine($"            <p>{emailMessage}</p>");
+            sb.AppendLine("        </div>");
+            sb.AppendLine("    </div>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            return sb.ToString();
         }
     }
 }

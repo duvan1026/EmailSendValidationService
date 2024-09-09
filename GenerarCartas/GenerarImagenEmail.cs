@@ -111,58 +111,6 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             manager = new FileProviderManager(servidor, centro, ref dbmImaging, Program.Config.usuario_log);
                             manager.Connect();
 
-                            /*   // Reporte .rdlc
-                            // Crear una instancia del ReportViewer y cargar el informe
-                            ReportViewer reportViewer = new ReportViewer();
-                            reportViewer.ProcessingMode = ProcessingMode.Local;
-
-                            string exePath = AppDomain.CurrentDomain.BaseDirectory;                                           // Obtener la ruta del directorio del ejecutable del servicio
-                            string reportPath = System.IO.Path.Combine(exePath, "GenerarCartas", "Report_GenerarImagenEmail.rdlc"); // Construir la ruta completa del archivo .rdlc
-                            reportViewer.LocalReport.ReportPath = reportPath;                                                 // Configurar el ReportViewer con la ruta del informe
-
-                            DataTable EmailImageDT = new DBTools.SchemaConfig.CTA_Email_ImagenDataTable();
-                            DateTime fechaActual = DateTime.Now;                                                // Obtener la fecha y hora actual
-                            CultureInfo cultura = new CultureInfo("es-ES");                                     // Establecer la cultura en español
-
-                            string _CC_Queue = "";
-                            if (itemfiltertrackingMail.CC_Queue != "" && itemfiltertrackingMail.CC_Queue != ";")
-                            {
-                                _CC_Queue = itemfiltertrackingMail.CC_Queue;
-                            }
-                            string _CCO_Queue = "";
-                            if (itemfiltertrackingMail.CCO_Queue != "" && itemfiltertrackingMail.CCO_Queue != ";")
-                            {
-                                _CCO_Queue = " " + itemfiltertrackingMail.CCO_Queue;
-                            }
-
-                            string dataCC_CCO = _CC_Queue + _CC_Queue;
-
-                            DataRow EmailImageDTRow = EmailImageDT.NewRow();
-                            EmailImageDTRow["EmailFrom"] = "<strong>De:</strong> " + itemfiltertrackingMail.EmailFrom;
-                            EmailImageDTRow["EmailSendDate"] = "<strong>Enviado:</strong> " + fechaActual.ToString("dddd, d 'de' MMMM 'de' yyyy HH:mm", cultura);
-                            EmailImageDTRow["EmailAddress"] = "<strong>Para:</strong> " + itemfiltertrackingMail.EmailAddress_Queue;
-                            EmailImageDTRow["Email_CC_CCO"] = "<strong>CC y CCO:</strong> " + dataCC_CCO;
-                            EmailImageDTRow["EmailSubject"] = "<strong>Asunto:</strong> " + itemfiltertrackingMail.Subject_Queue;
-                            EmailImageDTRow["EmailMessage"] = itemfiltertrackingMail.Message_Queue;
-
-                            EmailImageDT.Rows.Add(EmailImageDTRow);
-
-                            var emailImageDataSource = new ReportDataSource("CTA_Email_ImagenDataSet", EmailImageDT);
-
-                            reportViewer.LocalReport.DataSources.Clear();
-                            reportViewer.LocalReport.DataSources.Add(emailImageDataSource);
-
-                            ReportParameter[] reportParameters = new ReportParameter[]
-                            {
-                                new ReportParameter("Asunto", itemfiltertrackingMail.Subject_Queue),
-                            };
-
-                            reportViewer.LocalReport.SetParameters(reportParameters);   // Asignar los parámetros al ReportViewer
-
-                            reportViewer.RefreshReport();
-                            */
-
-
                             string FileName = "";
                             string htmlFilePath = "";
                             byte[] Imagen = null;
@@ -174,7 +122,6 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                             htmlFilePath = fullPath + identificador.ToString() + ".html";
                             FileName = fullPath + identificador.ToString() + ".tif";
-                            //Imagen = reportViewer.LocalReport.Render("Image");
 
                             string _CC_Queue = "";
                             if (itemfiltertrackingMail.CC_Queue != "" && itemfiltertrackingMail.CC_Queue != ";")
@@ -195,7 +142,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             var emailAddress = itemfiltertrackingMail.EmailAddress_Queue;
                             var emailCC_CCO = dataCC_CCO;
                             var emailSubject = itemfiltertrackingMail.Subject_Queue;
-                            var emailMessage = itemfiltertrackingMail.Message_Queue + itemfiltertrackingMail.Message_Queue;
+                            var emailMessage = itemfiltertrackingMail.Message_Queue;
 
                             var emailHtmlBuilder = new EmailHtmlBuilder(emailFrom, emailSendDate, cultura, emailAddress, emailCC_CCO, emailSubject, emailMessage);
                             string htmlContent = emailHtmlBuilder.GenerateHtml();
@@ -206,12 +153,6 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             converter.ConvertHtmlToTiffAsync(htmlFilePath, FileName).GetAwaiter().GetResult(); ;   // Convertir HTML a TIFF
                             
                             File.Delete(htmlFilePath);
-
-                            //using (var fs = new FileStream(FileName, FileMode.Create))
-                            //{
-                            //    fs.Write(Imagen, 0, Imagen.Length);
-                            //    fs.Close();
-                            //}
 
                             short folios = (short)ImageManager.GetFolios(FileName);
                             var FolioBitmap = ImageManager.GetFolioBitmap(FileName, folios);
