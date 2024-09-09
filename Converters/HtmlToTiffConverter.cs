@@ -24,7 +24,7 @@ namespace ServiceEmailSendValidation.Converters
 
         #region "Constructores"
 
-        public HtmlToTiffConverter(string outputFolderPath, int pageWidth = 768, int pageHeight = 1024, int defaultMarginTop = 20)
+        public HtmlToTiffConverter(string outputFolderPath, int pageWidth, int pageHeight, int defaultMarginTop)
         {
             _outputFolderPath = outputFolderPath;
             _pageWidth = pageWidth;

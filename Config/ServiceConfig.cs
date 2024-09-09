@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Slyg.Data.Schemas;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -7,6 +8,15 @@ using System.Threading.Tasks;
 
 namespace EmailSendValidationService.Config
 {
+
+    public static class ParameterSystem
+    {
+        public const string ThreadCountServiceESV = "thread_Count_ServiceESV";
+        public const string EmailEvidencePageWidth = "email_Evidence_Page_Width";
+        public const string EmailEvidencePageHeigth = "email_Evidence_Page_Heigth";
+        public const string ValueDefaultMarginTop = "value_Default_Margin_Top";
+    }
+
     public class ServiceConfig
     {
 
@@ -26,6 +36,15 @@ namespace EmailSendValidationService.Config
             public string Core_Risks;
             public string Imaging_Risks;
             public string Archiving_Risks;
+        }
+
+        [Serializable]
+        public struct TypeParametersString
+        {
+            public int ThreadCountServiceESV;
+            public int EmailEvidencePageWidth;
+            public int EmailEvidencePageHeigth;
+            public int ValueDefaultMarginTop;
         }
 
         #endregion
@@ -139,6 +158,57 @@ namespace EmailSendValidationService.Config
             }
 
             return cadenas;
+        }
+
+        public ServiceConfig.TypeParametersString GetParametersSystem()
+        {
+            ServiceConfig.TypeParametersString parameters = new ServiceConfig.TypeParametersString();
+
+            var connectionStrings = GetParametersSystemDataTable();
+
+            foreach (var parameter in connectionStrings)
+            {
+                switch (parameter.Nombre_Parametro)
+                {
+                    case ParameterSystem.ThreadCountServiceESV:
+                        parameters.ThreadCountServiceESV = int.TryParse(parameter.Valor_Parametro, out int result) ? result : 5;                                       // se establecen 5 hilos por defecto
+                        break;
+                    case ParameterSystem.EmailEvidencePageWidth:
+                        parameters.EmailEvidencePageWidth = int.TryParse(parameter.Valor_Parametro, out int resultPageWidth) ? resultPageWidth : 718;                                       // se establecen 5 hilos por defecto
+                        break;
+                    case ParameterSystem.EmailEvidencePageHeigth:
+                        parameters.EmailEvidencePageHeigth = int.TryParse(parameter.Valor_Parametro, out int resultPageHeigth) ? resultPageHeigth : 1024;                                       // se establecen 5 hilos por defecto
+                        break;
+                    case ParameterSystem.ValueDefaultMarginTop:
+                        parameters.ValueDefaultMarginTop = int.TryParse(parameter.Valor_Parametro, out int resultMarginTop) ? resultMarginTop : 20;                                       // se establecen 5 hilos por defecto
+                        break;
+                }
+            }
+
+            return parameters;
+        }
+
+        private DBTools.SchemaConfig.TBL_Parametro_SistemaDataTable GetParametersSystemDataTable()
+        {
+            DBTools.DBToolsDataBaseManager dbmTools = null;
+
+            try
+            {
+                dbmTools = new DBTools.DBToolsDataBaseManager(Program.ConnectionStrings.Tools);
+                dbmTools.Connection_Open();
+
+                DBTools.SchemaConfig.TBL_Parametro_SistemaDataTable parametersDataTable = dbmTools.SchemaConfig.TBL_Parametro_Sistema.DBGet(null);
+
+                return parametersDataTable;
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                dbmTools?.Connection_Close();
+            }
         }
 
         #endregion

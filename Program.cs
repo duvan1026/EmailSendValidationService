@@ -16,6 +16,7 @@ namespace EmailSendValidationService
 
         public static ServiceConfig Config = new ServiceConfig();
         public static ServiceConfig.TypeConnectionString ConnectionStrings;
+        public static ServiceConfig.TypeParametersString ConnectionParameterSystemStrings;
         public static DBImaging.SchemaConfig.CTA_ProyectoSimpleType ProyectoImagingRow = new DBImaging.SchemaConfig.CTA_ProyectoSimpleType();
 
         #endregion

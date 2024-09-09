@@ -134,7 +134,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                 _CCO_Queue = " " + itemfiltertrackingMail.CCO_Queue;
                             }
 
-                            string dataCC_CCO = _CC_Queue + _CC_Queue;
+                            string dataCC_CCO = _CC_Queue + _CCO_Queue;
 
                             var emailFrom = itemfiltertrackingMail.EmailFrom;
                             var emailSendDate = DateTime.Now;
@@ -149,7 +149,10 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                             File.WriteAllText(htmlFilePath, htmlContent);
 
-                            var converter = new HtmlToTiffConverter(fullPath);                                     // Instanciar el convertidor                            
+                            var pageWidth = Program.ConnectionParameterSystemStrings.EmailEvidencePageWidth;
+                            var pageHeigth = Program.ConnectionParameterSystemStrings.EmailEvidencePageHeigth;
+                            var marginTop = Program.ConnectionParameterSystemStrings.ValueDefaultMarginTop;
+                            var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop);   // Instanciar el convertidor                            
                             converter.ConvertHtmlToTiffAsync(htmlFilePath, FileName).GetAwaiter().GetResult(); ;   // Convertir HTML a TIFF
                             
                             File.Delete(htmlFilePath);

@@ -131,6 +131,8 @@ namespace EmailSendValidationService
 
                         if (trakingMailTable.Count > 0)
                         {
+                            // Traer Parametros del sistema
+                            Program.ConnectionParameterSystemStrings = Program.Config.GetParametersSystem();
 
                             DBTools.SchemaMail.TBL_Tracking_MailDataTable distinctTrakingMailTable = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
 
