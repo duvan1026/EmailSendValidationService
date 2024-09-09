@@ -16,6 +16,27 @@ namespace EmailSendValidationService
 
         public static ServiceConfig Config = new ServiceConfig();
         public static ServiceConfig.TypeConnectionString ConnectionStrings;
+        public static DBImaging.SchemaConfig.CTA_ProyectoSimpleType ProyectoImagingRow = new DBImaging.SchemaConfig.CTA_ProyectoSimpleType();
+
+        #endregion
+
+        #region " Propiedades "
+
+        internal static string AppPath
+        {
+            get
+            {
+                return System.Windows.Forms.Application.StartupPath.TrimEnd('\\') + "\\";
+            }
+        }
+
+        public static string TempPath
+        {
+            get
+            {
+                return "temp\\";
+            }
+        }
 
         #endregion
 

@@ -19,6 +19,7 @@ namespace EmailSendValidationService.Config
             public string Archiving;
             public string Core;
             public string Imaging;
+            public string Integration;
             public string OCR;
             public string Tools;
             public string Softrac;
@@ -37,6 +38,7 @@ namespace EmailSendValidationService.Config
             Core = 6,
             Archiving = 7,
             PunteoBanAgrario = 13,
+            Integration = 30,
             Tools = 3,
             Softrac = 35,
             Core_Risks = 38,
@@ -114,6 +116,9 @@ namespace EmailSendValidationService.Config
                         break;
                     case ServiceConfig.Modulo.Imaging:
                         cadenas.Imaging = Modulo.ConnectionString;
+                        break;
+                    case ServiceConfig.Modulo.Integration:
+                        cadenas.Integration = Modulo.ConnectionString;
                         break;
                     case ServiceConfig.Modulo.Core:
                         cadenas.Core = Modulo.ConnectionString;

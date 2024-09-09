@@ -8,9 +8,25 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DBCore;
+using DBImaging;
+using DBIntegration;
+using DBIntegration.SchemaSantander;
 using EmailSendValidationService.Logs;
 using EmailSendValidationService.Servicio;
+using Miharu.FileProvider.Library;
 using Slyg.Tools;
+//using Microsoft.Reporting.WinForms;
+using Miharu.Desktop.Library;
+using Miharu.Desktop.Library.Config;
+using Slyg.Tools.Imaging.FreeImageAPI.Plugins;
+using System.Xml.Linq;
+using System.IO;
+//using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
+using static Miharu.Desktop.Library.Permisos.Imaging.Proceso;
+using System.Globalization;
+using Slyg.Tools.Imaging;
+using ServiceEmailSendValidation.GenerarCartas;
 
 namespace EmailSendValidationService
 {
@@ -131,6 +147,8 @@ namespace EmailSendValidationService
                                 .ToList()
                                 .ForEach(row => distinctTrakingMailTable.ImportRow(row)); // almacena cada fila en una fila de distinctDashboardCapturasTable
 
+                            //Traer la consulta de las tablas que se puedan por las diferentes fk_Entidad y fk_proyecto.
+
                             foreach (var item in distinctTrakingMailTable)
                             {
                                 // Validar por entidad y proyecto si se encuentra en dia habil.
@@ -150,13 +168,11 @@ namespace EmailSendValidationService
                                         .ToList()
                                         .ForEach(row => filtertrackingMail.ImportRow(row));    // almacena cada fila en una fila de distinctDashboardCapturasTable
 
-                                    foreach (var itemfiltertrackingMail in filtertrackingMail)
-                                    {
-                                        // TO DO: Crear el documento del cuerpo del correo enviado por cada fila
-                                        var data = false;
-                                    }
-                                }                                
-                            }
+                                    // TODO: buscar la forma d eoptimizar haciendo una busqueda maxima de las consultas por entidad y proyecto.
+                                    GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
+                                    generarImagenEmail.GenerarCartas(filtertrackingMail);                                    
+                                }
+                            }                                
                         }
                     }
                     catch (Exception ex)

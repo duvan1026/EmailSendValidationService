@@ -40,8 +40,8 @@
             // serviceInstaller1
             // 
             this.serviceInstaller1.Description = "Servicio que realiza la validación por hora habil para habilitar envio de correos Tracking";
-            this.serviceInstaller1.DisplayName = "EmailSendValidationService";
-            this.serviceInstaller1.ServiceName = "ServiceEmailSendValidationService";
+            this.serviceInstaller1.DisplayName = "EmailSendValidation";
+            this.serviceInstaller1.ServiceName = "ServiceEmailSendValidation";
             // 
             // ProjectInstaller
             // 
