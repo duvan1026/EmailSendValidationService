@@ -138,7 +138,7 @@ namespace ServiceEmailSendValidation.Converters
                              const rect = el.getBoundingClientRect();
                              lines.push({
                                  top: Math.floor(rect.top + window.scrollY),   // Posición Y superior
-                                 bottom: Math.floor(rect.bottom + window.scrollY) // Posición Y inferior
+                                 bottom: Math.ceil(rect.bottom + window.scrollY) // Posición Y inferior
                              });
                          }
                      });
@@ -158,17 +158,16 @@ namespace ServiceEmailSendValidation.Converters
                     .Select(line => line["bottom"])
                     .LastOrDefault();
 
-                if (lastVisibleLineY == 0)
-                {
-                    lastVisibleLineY = currentPage * pageHeightAdjusted;
-                }
+                if (lastVisibleLineY == 0) lastVisibleLineY = currentPage * pageHeightAdjusted;
 
-                // Definir la ruta para la captura de pantalla
-                var screenshotPath = Path.Combine(_outputFolderPath, $"temp_page{currentPage}.png");
+                var screenshotPath = Path.Combine(_outputFolderPath, $"temp_page{currentPage}.png");        // Definir la ruta para la captura de pantalla
+
+                var bodyHeight = await page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight"); // Obtiene el valor mayor de hight renderizado
+                bool isBodyMax = bodyHeight <= (_pageHeight * currentPage);                                 // Evaluar si hay más contenido para capturar  
 
                 // Calcular la altura y posición de la página a capturar
-                int pageHeight = lastVisibleLineY - ((currentPage - 1) * pageHeightAdjusted);
-                pageHeight = (pageHeight > 0) ? pageHeight : (bottomValue - previousPageHeight);
+                int pageHeight = (currentPage == 1) ? lastVisibleLineY : lastVisibleLineY - previousPageHeight;
+                pageHeight = (!isBodyMax) ? pageHeight : (bottomValue - previousPageHeight);
                 int pageY = (currentPage == 1) ? 0 : previousPageHeight;
 
                 // Actualizar la altura de la página previa
@@ -190,7 +189,6 @@ namespace ServiceEmailSendValidation.Converters
                 tempImagePaths.Add(screenshotPath);
 
                 // Evaluar si hay más contenido para capturar
-                var bodyHeight = await page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight");
                 if (bodyHeight <= (_pageHeight * currentPage))
                 {
                     hasMoreContent = false;
