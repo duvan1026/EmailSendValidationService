@@ -27,6 +27,7 @@ using static Miharu.Desktop.Library.Permisos.Imaging.Proceso;
 using System.Globalization;
 using Slyg.Tools.Imaging;
 using ServiceEmailSendValidation.GenerarCartas;
+using Slyg.Data.Schemas;
 
 namespace EmailSendValidationService
 {
@@ -134,6 +135,7 @@ namespace EmailSendValidationService
                             // Traer Parametros del sistema
                             Program.ConnectionParameterSystemStrings = Program.Config.GetParametersSystem();
 
+                            //////////////////////////////////////////////////////////////////////////
                             DBTools.SchemaMail.TBL_Tracking_MailDataTable distinctTrakingMailTable = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
 
                             // Obtener los valores distintos de fk_Entidad y fk_Proyecto y los almacena en distinctTrakingMailTable
@@ -150,7 +152,6 @@ namespace EmailSendValidationService
                                 .ForEach(row => distinctTrakingMailTable.ImportRow(row)); // almacena cada fila en una fila de distinctDashboardCapturasTable
 
                             //Traer la consulta de las tablas que se puedan por las diferentes fk_Entidad y fk_proyecto.
-
                             foreach (var item in distinctTrakingMailTable)
                             {
                                 // Validar por entidad y proyecto si se encuentra en dia habil.
@@ -170,9 +171,18 @@ namespace EmailSendValidationService
                                         .ToList()
                                         .ForEach(row => filtertrackingMail.ImportRow(row));    // almacena cada fila en una fila de distinctDashboardCapturasTable
 
-                                    // TODO: buscar la forma d eoptimizar haciendo una busqueda maxima de las consultas por entidad y proyecto.
-                                    GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
-                                    generarImagenEmail.GenerarCartas(filtertrackingMail);                                    
+                                    ProcesadorHilos procesadorHilosInstance = new ProcesadorHilos();
+                                    procesadorHilosInstance.servicio = this;
+
+                                    foreach (var itemfiltertrackingMail in filtertrackingMail)
+                                    {
+                                        procesadorHilosInstance.AgregarHilo(itemfiltertrackingMail);
+                                    }
+
+                                    while (!procesadorHilosInstance.TerminoHilos())
+                                    {
+                                        System.Threading.Thread.Sleep(100);
+                                    }
                                 }
                             }                                
                         }
@@ -191,6 +201,27 @@ namespace EmailSendValidationService
             {
                 dataLog.AddErrorEntry("**TERMINACIÓN HILO PRINCIPAL**: Se ha producido un error durante la ejecución del hilo principal del servicio. Detalles del error: " + ex.ToString());
                 //dataLog.WriteErrorLog("Error Proceso ex: " + ex.ToString());
+            }
+        }
+
+        public void ProcesoPrincipalHilo(Object nParametroHilo)
+        {
+            string fk_expediente = string.Empty;
+
+            try
+            {
+                var parameters1 = (DBTools.SchemaMail.TBL_Tracking_MailRow)nParametroHilo;
+                fk_expediente = parameters1.fk_Expediente.ToString();
+
+                GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
+                generarImagenEmail.GenerarCartas(parameters1);
+
+            }
+            catch (Exception ex)
+            {
+                string expediente = (fk_expediente != null ) ? fk_expediente : "No disponible";
+                string messageError = $"Error Proceso en Expediente: {expediente} ex: {ex}";
+                dataLog.AddErrorEntry(messageError + ex.ToString());
             }
         }
 
@@ -247,7 +278,5 @@ namespace EmailSendValidationService
                 if (dbmTools != null) dbmTools.Connection_Close();
             }
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBTools.SchemaMail;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
@@ -23,7 +24,7 @@ namespace EmailSendValidationService.Servicio
 
         public ProcesadorHilos()
         {
-            numHilos = 8;//Program.ConnectionParametersStrings.threadCount;
+            numHilos = Program.ConnectionParameterSystemStrings.ThreadCountServiceESV;
         }
 
         #region
@@ -31,28 +32,28 @@ namespace EmailSendValidationService.Servicio
         #endregion
 
         #region " Metodos "
-        //public void AgregarHilo(DBImaging.SchemaConfig.CTA_Get_OCR_Captura_File_TypedRow nTransferenciarow, List<DocumentFieldsFiltersParameters> listFiledsFiltersParameters)
-        //{
-        //    if (!TieneHiloslibres())
-        //    {
-        //        do
-        //        {
-        //            Thread.Sleep(100);
-        //            if (TieneHiloslibres())
-        //            {
-        //                break;
-        //            }
-        //        } while (true);
-        //    }
+        public void AgregarHilo(DBTools.SchemaMail.TBL_Tracking_MailRow nTransferenciarow)
+        {
+            if (!TieneHiloslibres())
+            {
+                do
+                {
+                    Thread.Sleep(100);
+                    if (TieneHiloslibres())
+                    {
+                        break;
+                    }
+                } while (true);
+            }
 
-        //    Thread Threads = new Thread(new ParameterizedThreadStart(servicio.ProcesoPrincipalHilo)); // especifica el metodo que será ejecutado por el hilo
-        //    Threads.Start(Tuple.Create(nTransferenciarow, listFiledsFiltersParameters));
+            Thread Threads = new Thread(new ParameterizedThreadStart(servicio.ProcesoPrincipalHilo)); // especifica el metodo que será ejecutado por el hilo
+            Threads.Start(nTransferenciarow);
 
-        //    lock (objLock)
-        //    {
-        //        ListaHilos.Add(Threads);
-        //    }
-        //}
+            lock (objLock)
+            {
+                ListaHilos.Add(Threads);
+            }
+        }
 
         #endregion
 

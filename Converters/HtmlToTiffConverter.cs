@@ -43,7 +43,8 @@ namespace ServiceEmailSendValidation.Converters
                 // Descarga y configuración de Puppeteer
                 var browserFetcher = new BrowserFetcher();
                 await browserFetcher.DownloadAsync();
-                var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+                //var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+                var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = false });  // modo para renderizar en servicio windows
 
                 // Crear una nueva página y cargar el contenido HTML
                 var page = await browser.NewPageAsync();
@@ -53,12 +54,36 @@ namespace ServiceEmailSendValidation.Converters
                 // Esperar a que el cuerpo de la página esté completamente renderizado
                 await page.WaitForSelectorAsync("body");
 
+                // Asegurar que todas las imágenes se hayan cargado completamente
+                await page.EvaluateFunctionAsync(@"() => {
+                    return new Promise((resolve) => {
+                        const checkIfImagesLoaded = () => {
+                            if (Array.from(document.images).every(img => img.complete)) {
+                                resolve();
+                            } else {
+                                setTimeout(checkIfImagesLoaded, 100);
+                            }
+                        };
+                        checkIfImagesLoaded();
+                    });
+                }");
+
+
                 // Establecer el tamaño de la vista de la página
                 await page.SetViewportAsync(new ViewPortOptions
                 {
                     Width = _pageWidth,
                     Height = _pageHeight 
                 });
+
+
+                /// DEBUG
+                //// Capturar la imagen de la página completa
+                //var screenshotPath = Path.Combine(_outputFolderPath, $"{Path.GetFileNameWithoutExtension(outputTiffPath + "_test")}.png");
+                //await page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
+                //{
+                //    FullPage = true  // Captura toda la página
+                //});
 
                 // Capturar las imágenes por partes
                 var tempImagePaths = await CapturePageScreenshotsAsync((Page)page);
@@ -100,9 +125,9 @@ namespace ServiceEmailSendValidation.Converters
                     tiff.Write(outputTiffPath);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -127,6 +152,7 @@ namespace ServiceEmailSendValidation.Converters
             var tempImageCorrectPaths = new List<string>();
             int currentPage = 1;
             bool hasMoreContent = true;
+            Guid identifier = Guid.NewGuid();
 
             // Obtener la posición superior e inferior de todas las líneas de texto visibles en la página
             var linePositions = await page.EvaluateFunctionAsync<List<Dictionary<string, int>>>(@"
@@ -160,7 +186,7 @@ namespace ServiceEmailSendValidation.Converters
 
                 if (lastVisibleLineY == 0) lastVisibleLineY = currentPage * pageHeightAdjusted;
 
-                var screenshotPath = Path.Combine(_outputFolderPath, $"temp_page{currentPage}.png");        // Definir la ruta para la captura de pantalla
+                var screenshotPath = Path.Combine(_outputFolderPath, $"{identifier}_{currentPage}.png");        // Definir la ruta para la captura de pantalla
 
                 var bodyHeight = await page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight"); // Obtiene el valor mayor de hight renderizado
                 bool isBodyMax = bodyHeight <= (_pageHeight * currentPage);                                 // Evaluar si hay más contenido para capturar  
@@ -278,9 +304,9 @@ namespace ServiceEmailSendValidation.Converters
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 

@@ -80,7 +80,6 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Microsoft.Extensions.Options.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Microsoft.Extensions.Primitives.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PuppeteerSharp.xml
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Slyg.Tools.Imaging.pdb
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.Buffers.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.Memory.xml
@@ -90,8 +89,6 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.Text.Json.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\System.ValueTuple.xml
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\GdPicture.NET.12.xml
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PdfSharp.xml
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.csproj.AssemblyReference.cache
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\EmailSendValidationService.ProjectInstaller.resources
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.csproj.GenerateResource.cache
@@ -99,3 +96,4 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceE.7AC1FADF.Up2Date
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.exe
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.pdb
+C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\ICSharpCode.SharpZipLib.dll
