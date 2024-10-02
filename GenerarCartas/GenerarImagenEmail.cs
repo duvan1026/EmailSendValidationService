@@ -161,7 +161,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                             short folios = (short)ImageManager.GetFolios(fileName);
                             var FolioBitmap = ImageManager.GetFolioBitmap(fileName, folios);
-                            short fileImageEmail = (short)(itemfiltertrackingMail.fk_File + 1);
+                            short fileImageEmail = (short)itemfiltertrackingMail.fk_File;
 
                             var servidor = dbmImaging.SchemaCore.CTA_Servidor.DBFindByfk_Entidadid_Servidor(firstRowOTData.fk_Entidad_Servidor, firstRowOTData.fk_Servidor)[0].ToCTA_ServidorSimpleType();
                             var centro = dbmImaging.SchemaSecurity.CTA_Centro_Procesamiento.DBFindByfk_Entidadfk_Sedeid_Centro_Procesamiento(firstRowOTData.fk_Entidad_Procesamiento, firstRowOTData.fk_Sede_Procesamiento_Cargue, firstRowOTData.fk_Centro_Procesamiento_Cargue)[0].ToCTA_Centro_ProcesamientoSimpleType();
@@ -189,6 +189,10 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                                             var formato = Utilities.GetEnumFormat(Program.ProyectoImagingRow.id_Formato_Imagen_Entrada.ToString());
                                             var compresion = Utilities.GetEnumCompression((DesktopConfig.FormatoImagenEnum)Program.ProyectoImagingRow.id_Formato_Imagen_Salida);
+
+                                            // Evalua el ultimo folio de ese expediente folder para almacenar la evidencia del correo
+                                            short lastFolio = EvaluateFolio(ref manager, itemfiltertrackingMail, fileImageEmail);
+                                            fileImageEmail = (short)(lastFolio + 1);
 
                                             for (int folio = 1; folio <= (folios + _ImageCount); folio++)
                                             {
@@ -387,6 +391,36 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
         #region "Funciones"
 
+        /// <summary>
+        /// Evalúa la existencia de un folio verificando un rango de índices.
+        /// Busca el folio desde <paramref name="startIndex"/> hasta <paramref name="endIndex"/> 
+        /// (por defecto es 1000). El método actualiza el último índice donde se encontró el folio.
+        /// </summary>
+        /// /// <param name="manager">Referencia a la instancia de <see cref="FileProviderManager"/> utilizada para gestionar operaciones de archivos.</param>
+        /// <param name="itemfiltertrackingMail">La fila de seguimiento de correo utilizada como filtro para la verificación de la existencia del folio.</param>
+        /// <param name="startIndex">El índice desde el cual comenzar a verificar la existencia del folio.</param>
+        /// <param name="endIndex">El índice hasta el cual verificar la existencia del folio (por defecto es 1000).</param>
+        /// <returns>El último índice donde se encontró que el folio existe. Retorna -1 si no se encontró ningún folio en el rango especificado.</returns>
+        public short EvaluateFolio(ref FileProviderManager manager, DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail, short startIndex, short endIndex = 1000)
+        {
+            short lastTrueIndex = -1; // Inicializamos el índice del último true
+
+            for (short i = startIndex; i <= endIndex; i++)
+            {
+                if (ExistFolio(ref manager, itemfiltertrackingMail, i, 1))
+                {
+                    lastTrueIndex = i; // Guardamos el índice donde fue true
+                    continue; // Continuamos evaluando
+                }
+                else
+                {
+                    break; // Salimos si ExistFolio devuelve false
+                }
+            }
+
+            return (lastTrueIndex <= startIndex)? startIndex: lastTrueIndex; // Retornamos el último índice donde fue true si no es menor al indice de inicio
+        }
+
         private bool ExistFolio(ref FileProviderManager manager, DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail, short fileImageEmail, int folio)
         {
             bool existFolio = false;
@@ -496,11 +530,12 @@ namespace ServiceEmailSendValidation.GenerarCartas
                     dbmTools.Connection_Open();
 
                     var currentDate = DateTime.Now;
+                    Guid guidQueue = Guid.NewGuid();  // Generar un nuevo Guid para el id_Queue
 
                     // Insertamos en TBL_Queue para enviar email
                     var dataTBLQueueType = new DBTools.SchemaMail.TBL_QueueType
                     {
-                        id_Queue = Guid.NewGuid(),  // Generar un nuevo Guid para el id_Queue
+                        id_Queue = guidQueue,
                         fk_Entidad = itemfiltertrackingMail.fk_Entidad,
                         fk_Usuario = itemfiltertrackingMail.fk_Usuario,
                         Fecha_Queue = currentDate,  // Fecha actual
@@ -521,7 +556,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                     // Actualizamos estado y fecha de envío en TBL_Tracking_Mail
                     var dataTBLTrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailType
                     {
-                        fk_Queue = itemfiltertrackingMail.fk_Queue,
+                        fk_Queue = guidQueue,
                         fk_Entidad = itemfiltertrackingMail.fk_Entidad,
                         fk_Proyecto = itemfiltertrackingMail.fk_Proyecto,
                         fk_Expediente = itemfiltertrackingMail.fk_Expediente,
