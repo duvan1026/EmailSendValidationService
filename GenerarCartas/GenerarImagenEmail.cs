@@ -255,7 +255,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
                                                     fileProcesType.Folios_File = ((SlygNullable<short>)(folios + _ImageCount));
                                                     fileProcesType.Monto_File = 0;
-                                                    fileProcesType.CBarras_File = "";
+                                                    fileProcesType.CBarras_File = itemfiltertrackingMail.fk_Expediente.ToString() + itemfiltertrackingMail.fk_Folder.ToString() + fileImageEmail;
 
                                                     var FileEstadoType = new DBCore.SchemaProcess.TBL_File_EstadoType();
                                                     FileEstadoType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
