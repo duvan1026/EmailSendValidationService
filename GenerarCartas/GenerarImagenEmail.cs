@@ -128,6 +128,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                             // Actualiza data en TBL_queue y TBL_TrackingMail para enviar correo
                             var sendEmailDate = ProcessEmailQueueAndUpdateTracking(itemfiltertrackingMail);
+                            //var sendEmailDate = DateTime.Now;
 
                             // Construcción de rutas de archivo
                             string fullPath = Path.Combine(Program.AppPath, Program.TempPath);
@@ -255,7 +256,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
                                                     fileProcesType.Folios_File = ((SlygNullable<short>)(folios + _ImageCount));
                                                     fileProcesType.Monto_File = 0;
-                                                    fileProcesType.CBarras_File = "";
+                                                    fileProcesType.CBarras_File = itemfiltertrackingMail.fk_Expediente.ToString() + itemfiltertrackingMail.fk_Folder.ToString() + fileImageEmail.ToString();
 
                                                     var FileEstadoType = new DBCore.SchemaProcess.TBL_File_EstadoType();
                                                     FileEstadoType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
@@ -532,53 +533,53 @@ namespace ServiceEmailSendValidation.GenerarCartas
                     var currentDate = DateTime.Now;
                     Guid guidQueue = Guid.NewGuid();  // Generar un nuevo Guid para el id_Queue
 
-                    // Insertamos en TBL_Queue para enviar email
-                    var dataTBLQueueType = new DBTools.SchemaMail.TBL_QueueType
-                    {
-                        id_Queue = guidQueue,
-                        fk_Entidad = itemfiltertrackingMail.fk_Entidad,
-                        fk_Usuario = itemfiltertrackingMail.fk_Usuario,
-                        Fecha_Queue = currentDate,  // Fecha actual
-                        EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
-                        CC_Queue = itemfiltertrackingMail.CC_Queue,
-                        CCO_Queue = itemfiltertrackingMail.CCO_Queue,
-                        Subject_Queue = itemfiltertrackingMail.Subject_Queue,
-                        Message_Queue = itemfiltertrackingMail.Message_Queue,
-                        Attach_Queue = itemfiltertrackingMail.Attach_Queue,
-                        AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
-                        EmailFrom = itemfiltertrackingMail.EmailFrom,
-                        EmailTracking = true,  // Marcar como correo a ser trackeado
-                        EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay
-                    };
-                    dbmTools.SchemaMail.TBL_Queue.DBInsert(dataTBLQueueType);
+                    //// Insertamos en TBL_Queue para enviar email
+                    //var dataTBLQueueType = new DBTools.SchemaMail.TBL_QueueType
+                    //{
+                    //    id_Queue = guidQueue,
+                    //    fk_Entidad = itemfiltertrackingMail.fk_Entidad,
+                    //    fk_Usuario = itemfiltertrackingMail.fk_Usuario,
+                    //    Fecha_Queue = currentDate,  // Fecha actual
+                    //    EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
+                    //    CC_Queue = itemfiltertrackingMail.CC_Queue,
+                    //    CCO_Queue = itemfiltertrackingMail.CCO_Queue,
+                    //    Subject_Queue = itemfiltertrackingMail.Subject_Queue,
+                    //    Message_Queue = itemfiltertrackingMail.Message_Queue,
+                    //    Attach_Queue = itemfiltertrackingMail.Attach_Queue,
+                    //    AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
+                    //    EmailFrom = itemfiltertrackingMail.EmailFrom,
+                    //    EmailTracking = true,  // Marcar como correo a ser trackeado
+                    //    EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay
+                    //};
+                    //dbmTools.SchemaMail.TBL_Queue.DBInsert(dataTBLQueueType);
 
 
                     // Actualizamos estado y fecha de envío en TBL_Tracking_Mail
-                    var dataTBLTrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailType
-                    {
-                        fk_Queue = guidQueue,
-                        fk_Entidad = itemfiltertrackingMail.fk_Entidad,
-                        fk_Proyecto = itemfiltertrackingMail.fk_Proyecto,
-                        fk_Expediente = itemfiltertrackingMail.fk_Expediente,
-                        fk_Folder = itemfiltertrackingMail.fk_Folder,
-                        fk_File = itemfiltertrackingMail.fk_File,
-                        fk_Usuario = itemfiltertrackingMail.fk_Usuario,
-                        Fecha_Log = itemfiltertrackingMail.Fecha_Log,
-                        EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
-                        CC_Queue = itemfiltertrackingMail.CC_Queue,
-                        CCO_Queue = itemfiltertrackingMail.CCO_Queue,
-                        Subject_Queue = itemfiltertrackingMail.Subject_Queue,
-                        Message_Queue = itemfiltertrackingMail.Message_Queue,
-                        Attach_Queue = itemfiltertrackingMail.Attach_Queue,
-                        AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
-                        EmailFrom = itemfiltertrackingMail.EmailFrom,
-                        EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay,
-                        Fecha_Envio = currentDate,
-                        fk_Estado_Correo = 2,
-                        Detalle_Envio = itemfiltertrackingMail.Detalle_Envio,
-                        IsActive = itemfiltertrackingMail.IsActive
-                    };
-                    dbmTools.SchemaMail.TBL_Tracking_Mail.DBUpdate(dataTBLTrackingMail, itemfiltertrackingMail.id_Tracking_Mail);
+                    //var dataTBLTrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailType
+                    //{
+                    //    fk_Queue = guidQueue,
+                    //    fk_Entidad = itemfiltertrackingMail.fk_Entidad,
+                    //    fk_Proyecto = itemfiltertrackingMail.fk_Proyecto,
+                    //    fk_Expediente = itemfiltertrackingMail.fk_Expediente,
+                    //    fk_Folder = itemfiltertrackingMail.fk_Folder,
+                    //    fk_File = itemfiltertrackingMail.fk_File,
+                    //    fk_Usuario = itemfiltertrackingMail.fk_Usuario,
+                    //    Fecha_Log = itemfiltertrackingMail.Fecha_Log,
+                    //    EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
+                    //    CC_Queue = itemfiltertrackingMail.CC_Queue,
+                    //    CCO_Queue = itemfiltertrackingMail.CCO_Queue,
+                    //    Subject_Queue = itemfiltertrackingMail.Subject_Queue,
+                    //    Message_Queue = itemfiltertrackingMail.Message_Queue,
+                    //    Attach_Queue = itemfiltertrackingMail.Attach_Queue,
+                    //    AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
+                    //    EmailFrom = itemfiltertrackingMail.EmailFrom,
+                    //    EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay,
+                    //    Fecha_Envio = currentDate,
+                    //    fk_Estado_Correo = 2,
+                    //    Detalle_Envio = itemfiltertrackingMail.Detalle_Envio,
+                    //    IsActive = itemfiltertrackingMail.IsActive
+                    //};
+                    //dbmTools.SchemaMail.TBL_Tracking_Mail.DBUpdate(dataTBLTrackingMail, itemfiltertrackingMail.id_Tracking_Mail);
 
                     return currentDate;
                 }

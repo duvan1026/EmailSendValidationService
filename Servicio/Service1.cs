@@ -61,7 +61,7 @@ namespace EmailSendValidationService
             DetenerServicio();
         }
 
-        private void IniciarServicio()
+        public void IniciarServicio()
         {
             try
             {
@@ -114,7 +114,7 @@ namespace EmailSendValidationService
             }
         }
 
-        private void DetenerServicio()
+        public void DetenerServicio()
         {
             stopRequested = true;      // Solicitar detener el servicio
         }
@@ -127,7 +127,7 @@ namespace EmailSendValidationService
                 {
                     try
                     {
-                        short EmailScheduledStatus = 1;   // To Do: Cambiar por el estado
+                        short EmailScheduledStatus = 2;   // To Do: Cambiar por el estado
                         DBTools.SchemaMail.TBL_Tracking_MailDataTable trakingMailTable = LoadEmailScheduledStatus(EmailScheduledStatus);
 
                         if (trakingMailTable.Count > 0)
@@ -154,9 +154,9 @@ namespace EmailSendValidationService
                             //Traer la consulta de las tablas que se puedan por las diferentes fk_Entidad y fk_proyecto.
                             foreach (var item in distinctTrakingMailTable)
                             {
-                                // Validar por entidad y proyecto si se encuentra en dia habil.
-                                if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
-                                {
+                                //Validar por entidad y proyecto si se encuentra en dia habil.
+                                //if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
+                                //{
 
                                     DBTools.SchemaMail.TBL_Tracking_MailDataTable filtertrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
 
@@ -183,15 +183,18 @@ namespace EmailSendValidationService
                                     {
                                         System.Threading.Thread.Sleep(100);
                                     }
-                                }
+                                //}
                             }                                
                         }
+                        
                     }
                     catch (Exception ex)
                     {
                         dataLog.AddErrorEntry("Error Proceso ex: " + ex.ToString());
                     }
 
+                    OnStop();
+                    stopRequested = true;                   
                     if (stopRequested) return;
 
                     Thread.Sleep(Program.Config.Intervalo);  // Esperar n segundos antes de continuar
@@ -235,7 +238,11 @@ namespace EmailSendValidationService
                 dbmTools.Connection_Open();
 
                 // Procede a extraer los registros 
-                var trackingMailTable = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Estado_Correo(_OCRCaptureState);
+                //var trackingMailTable = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Estado_Correo(_OCRCaptureState);
+                var trackingMailTable = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Entidadfk_Proyectofk_Estado_CorreoIsActive(55,1,4,true);
+                //string fechaCadena = "2024-10-07 14:52:05.000";
+                //DateTime fecha = DateTime.ParseExact(fechaCadena, "yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
+                //var trackingMailTable = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Expedientefk_Folderfk_FileFecha_Log(38321206,1, 2, fecha);
 
                 return trackingMailTable;
             }

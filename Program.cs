@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EmailSendValidationService
 {
-    internal static class Program
+    public static class Program
     {
 
         #region " Declaraciones "
@@ -42,6 +42,34 @@ namespace EmailSendValidationService
         #endregion
 
         #region " Metodos "
+        // Mueve la lógica de inicialización a este método
+        public static void Initialize()
+        {
+            // Asigna las variables que necesitas
+            ConnectionStrings = Config.GetCadenasConexion();
+
+            if (ConnectionStrings.Security == "")
+            {
+                throw new Exception("No se pudo obtener la cadena de conexión a la base de datos Security");
+            }
+
+            if (ConnectionStrings.Core == "")
+            {
+                throw new Exception("No se pudo obtener la cadena de conexión a la base de datos Core");
+            }
+
+            if (ConnectionStrings.Imaging == "")
+            {
+                throw new Exception("No se pudo obtener la cadena de conexión a la base de datos Imaging");
+            }
+
+            if (ConnectionStrings.OCR == "")
+            {
+                throw new Exception("No se pudo obtener la cadena de conexión a la base de datos OCR");
+            }
+        }
+
+
 
         internal static string AppDataPath
         {
@@ -65,14 +93,37 @@ namespace EmailSendValidationService
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>
-        static void Main()
+        public static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            //ServiceBase[] ServicesToRun;
+            //ServicesToRun = new ServiceBase[]
+            //{
+            //    new Service1()
+            //};
+            //ServiceBase.Run(ServicesToRun);
+
+            if (Environment.UserInteractive)
             {
-                new Service1()
-            };
-            ServiceBase.Run(ServicesToRun);
+                // Ejecutar el servicio en modo interactivo (como si fuera una consola para depuración)
+                var service = new Service1();
+                service.IniciarServicio();
+
+                Console.WriteLine("Servicio iniciado en modo interactivo.");
+                Console.WriteLine("Presiona cualquier tecla para detener...");
+                Console.ReadKey();  // Esperar a que el usuario presione una tecla para simular la detención del servicio
+
+                service.DetenerServicio();
+            }
+            else
+            {
+                // Ejecutar el servicio normalmente como un servicio de Windows
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
+                    new Service1()
+                };
+                ServiceBase.Run(ServicesToRun);
+            }
         }
 
 
