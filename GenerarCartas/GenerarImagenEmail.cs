@@ -262,7 +262,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     FileEstadoType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
                                                     FileEstadoType.fk_File = fileImageEmail;
                                                     FileEstadoType.Modulo = new Slyg.Tools.SlygNullable<byte>((byte)ServiceConfig.Modulo.Imaging);
-                                                    FileEstadoType.fk_Estado = 60;
+                                                    FileEstadoType.fk_Estado = 38;  // estado Indexado 
                                                     FileEstadoType.fk_Usuario = Program.Config.usuario_log;
                                                     FileEstadoType.Fecha_Log = DateTime.Now;
 
