@@ -1946,6 +1946,7 @@
             <summary>
             Cookie partition key. The site of the top-level URL the browser was visiting at the
             start of the request to the endpoint that set the cookie. Supported only in Chrome.
+            TODO: a breaking change is needed to support other partition keys.
             </summary>
         </member>
         <member name="P:PuppeteerSharp.CookieParam.PartitionKeyOpaque">
@@ -2688,7 +2689,7 @@
         <member name="M:PuppeteerSharp.Frame.AddScriptTagAsync(PuppeteerSharp.AddTagOptions)">
             <inheritdoc/>
         </member>
-        <member name="M:PuppeteerSharp.Frame.GetContentAsync">
+        <member name="M:PuppeteerSharp.Frame.GetContentAsync(PuppeteerSharp.GetContentOptions)">
             <inheritdoc/>
         </member>
         <member name="M:PuppeteerSharp.Frame.SetContentAsync(System.String,PuppeteerSharp.NavigationOptions)">
@@ -2798,6 +2799,20 @@
         </member>
         <member name="M:PuppeteerSharp.GeolocationOption.GetHashCode">
             <inheritdoc/>
+        </member>
+        <member name="T:PuppeteerSharp.GetContentOptions">
+            <summary>
+            Options for <see cref="M:PuppeteerSharp.IPage.GetContentAsync(PuppeteerSharp.GetContentOptions)"/> and <see cref="M:PuppeteerSharp.IFrame.GetContentAsync(PuppeteerSharp.GetContentOptions)"/>.
+            </summary>
+        </member>
+        <member name="P:PuppeteerSharp.GetContentOptions.ReplaceLoneSurrogates">
+            <summary>
+            Replace lone surrogates with U+FFFD replacement character.
+            </summary>
+            <remarks>
+            This functionality relies on the toWellFormed function. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toWellFormed">See.</a>.
+            It's set to false by default to prevent extra processing when not needed.
+            </remarks>
         </member>
         <member name="T:PuppeteerSharp.HeadlessMode">
             <summary>
@@ -2937,6 +2952,15 @@
             <summary>
             An async queue that accepts a task but defers its execution to be handled by a consumer queue.
             </summary>
+        </member>
+        <member name="M:PuppeteerSharp.Helpers.Json.CookiePartitionKeyConverter.CanConvert(System.Type)">
+            <inheritdoc cref="T:System.Text.Json.Serialization.JsonConverter"/>
+        </member>
+        <member name="M:PuppeteerSharp.Helpers.Json.CookiePartitionKeyConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc cref="T:System.Text.Json.Serialization.JsonConverter"/>
+        </member>
+        <member name="M:PuppeteerSharp.Helpers.Json.CookiePartitionKeyConverter.Write(System.Text.Json.Utf8JsonWriter,System.String,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc cref="T:System.Text.Json.Serialization.JsonConverter"/>
         </member>
         <member name="T:PuppeteerSharp.Helpers.Json.HttpMethodConverter">
             <summary>
@@ -3081,6 +3105,13 @@
             </summary>
             <param name="value">The string to quote.</param>
             <returns>A quoted string.</returns>
+        </member>
+        <member name="M:PuppeteerSharp.Helpers.StringExtensions.Unquote(System.String)">
+            <summary>
+            Unquotes the specified <see cref="T:System.String"/>.
+            </summary>
+            <param name="value">The string to unquote.</param>
+            <returns>An unquoted string.</returns>
         </member>
         <member name="T:PuppeteerSharp.Helpers.TaskHelper">
             <summary>
@@ -4381,12 +4412,13 @@
             <exception cref="T:PuppeteerSharp.SelectorException">If there's no element matching <paramref name="selector"/>.</exception>
             <returns>Task which resolves when the element matching <paramref name="selector"/> is successfully focused.</returns>
         </member>
-        <member name="M:PuppeteerSharp.IFrame.GetContentAsync">
+        <member name="M:PuppeteerSharp.IFrame.GetContentAsync(PuppeteerSharp.GetContentOptions)">
             <summary>
             Gets the full HTML contents of the page, including the doctype.
             </summary>
+            <param name="options">Options.</param>
             <returns>Task which resolves to the HTML content.</returns>
-            <seealso cref="M:PuppeteerSharp.IPage.GetContentAsync"/>
+            <seealso cref="M:PuppeteerSharp.IPage.GetContentAsync(PuppeteerSharp.GetContentOptions)"/>
         </member>
         <member name="M:PuppeteerSharp.IFrame.GetTitleAsync">
             <summary>
@@ -6417,12 +6449,13 @@
             <exception cref="T:PuppeteerSharp.SelectorException">If there's no element matching <paramref name="selector"/>.</exception>
             <returns>Task which resolves when the element matching <paramref name="selector"/> is successfully focused.</returns>
         </member>
-        <member name="M:PuppeteerSharp.IPage.GetContentAsync">
+        <member name="M:PuppeteerSharp.IPage.GetContentAsync(PuppeteerSharp.GetContentOptions)">
             <summary>
             Gets the full HTML contents of the page, including the doctype.
             </summary>
+            <param name="options">Options.</param>
             <returns>Task which resolves to the HTML content.</returns>
-            <seealso cref="M:PuppeteerSharp.IFrame.GetContentAsync"/>
+            <seealso cref="M:PuppeteerSharp.IFrame.GetContentAsync(PuppeteerSharp.GetContentOptions)"/>
         </member>
         <member name="M:PuppeteerSharp.IPage.GetCookiesAsync(System.String[])">
             <summary>
@@ -7659,6 +7692,11 @@
             <param name="timeout">The maximum wait period.</param>
             <returns><c>true</c> if Base process has exited within the given <paramref name="timeout"/>,
             or <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:PuppeteerSharp.LauncherBase.OnExit">
+            <summary>
+            Cleans up temporary user data directory.
+            </summary>
         </member>
         <member name="M:PuppeteerSharp.LauncherBase.SetEnvVariables(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.IDictionary)">
             <summary>
@@ -9053,7 +9091,7 @@
         <member name="M:PuppeteerSharp.Page.RemoveExposedFunctionAsync(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:PuppeteerSharp.Page.GetContentAsync">
+        <member name="M:PuppeteerSharp.Page.GetContentAsync(PuppeteerSharp.GetContentOptions)">
             <inheritdoc/>
         </member>
         <member name="M:PuppeteerSharp.Page.SetContentAsync(System.String,PuppeteerSharp.NavigationOptions)">

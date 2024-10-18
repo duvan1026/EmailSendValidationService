@@ -8,6 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Threading;
+using System.Collections.Concurrent;
+using EmailSendValidationService;
+using PuppeteerSharp.BrowserData;
+//using OpenQA.Selenium;
+//using OpenQA.Selenium.Chrome;
 
 namespace ServiceEmailSendValidation.Converters
 {
@@ -19,6 +25,8 @@ namespace ServiceEmailSendValidation.Converters
         private readonly int _pageWidth;
         private readonly int _pageHeight;
         private readonly int _defaultMarginTop;
+
+        //private static readonly object _lockObject = new object();  // Objeto para sincronizar el acceso a escritura DBTools y asegurar ejecución por un solo hilo a la vez.
 
         #endregion
 
@@ -36,72 +44,151 @@ namespace ServiceEmailSendValidation.Converters
 
         #region "Metodos"
 
-        public async Task ConvertHtmlToTiffAsync(string htmlFilePath, string outputTiffPath)
+        public void ConvertHtmlToTiff(string htmlFilePath, string outputTiffPath, ref IBrowser browser)
+        {
+            //IBrowser browser = null;
+            IPage page = null;
+
+            try
+            {
+                // Lanzar el navegador sincrónicamente
+                //browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).GetAwaiter().GetResult();
+
+                // Abrir una nueva página sincrónicamente
+                page = browser.NewPageAsync().GetAwaiter().GetResult();
+
+                // Llamar al método interno que realiza la conversión (también necesitas una versión sincrónica)
+                ConvertHtmlToTiffInternal((Page)page, htmlFilePath, outputTiffPath);
+            }
+            catch (Exception ex)
+            {
+                throw; 
+            }
+            finally
+            {
+                // Asegurarse de cerrar la página y el navegador
+                if (page != null)
+                {
+                    page.CloseAsync().GetAwaiter().GetResult();
+                }
+
+                //if (browser != null)
+                //{
+                //    browser.CloseAsync().GetAwaiter().GetResult();
+                //}
+            }
+        }
+
+        public void ConvertHtmlToTiffInternal(Page page, string htmlFilePath, string outputTiffPath)
         {
             try
             {
-                // Descarga y configuración de Puppeteer
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-                //var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
-                var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = false });  // modo para renderizar en servicio windows
+                var htmlContent = File.ReadAllText(htmlFilePath);            // lee el html
+                page.SetContentAsync(htmlContent);
 
-                // Crear una nueva página y cargar el contenido HTML
-                var page = await browser.NewPageAsync();
-                var htmlContent = File.ReadAllText(htmlFilePath);
-                await page.SetContentAsync(htmlContent);
-
-                // Esperar a que el cuerpo de la página esté completamente renderizado
-                await page.WaitForSelectorAsync("body");
-
-                // Asegurar que todas las imágenes se hayan cargado completamente
-                await page.EvaluateFunctionAsync(@"() => {
-                    return new Promise((resolve) => {
-                        const checkIfImagesLoaded = () => {
-                            if (Array.from(document.images).every(img => img.complete)) {
-                                resolve();
-                            } else {
-                                setTimeout(checkIfImagesLoaded, 100);
-                            }
-                        };
-                        checkIfImagesLoaded();
-                    });
-                }");
-
+                System.Threading.Thread.Sleep(2000);
 
                 // Establecer el tamaño de la vista de la página
-                await page.SetViewportAsync(new ViewPortOptions
+                page.SetViewportAsync(new ViewPortOptions
                 {
                     Width = _pageWidth,
-                    Height = _pageHeight 
-                });
+                    Height = _pageHeight
+                }).GetAwaiter().GetResult();
 
+                // Esperar a que el documento esté completamente cargado
+                page.WaitForFunctionAsync("() => document.readyState === 'complete'").GetAwaiter().GetResult();
 
-                /// DEBUG
-                //// Capturar la imagen de la página completa
-                //var screenshotPath = Path.Combine(_outputFolderPath, $"{Path.GetFileNameWithoutExtension(outputTiffPath + "_test")}.png");
+                // Verificar que el contenedor principal está presente y visible
+                page.WaitForFunctionAsync("() => { const container = document.querySelector('.container'); return container && container.offsetHeight > 0; }").GetAwaiter().GetResult();
+
+                // Asegurarse de que hay contenido en el encabezado y al menos una sección
+                page.WaitForFunctionAsync("() => { const headerText = document.querySelector('.header').innerText; const sections = document.querySelectorAll('.section'); return headerText.trim().length > 0 && sections.length > 0; }").GetAwaiter().GetResult();
+
+                // Esperar hasta que todas las imágenes estén completamente cargadas
+                page.WaitForFunctionAsync("() => document.readyState === 'complete' && Array.from(document.images).every(img => img.complete)").GetAwaiter().GetResult();
+
+                // Esperar otros 2 segundos de manera sincrónica
+                System.Threading.Thread.Sleep(2000);
+
+                ///// DEBUG
+                ////// Capturar la imagen de la página completa
+                //var screenshotPath = Path.Combine(_outputFolderPath, $"{Path.GetFileNameWithoutExtension(outputTiffPath)}_test.png");
                 //await page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
                 //{
                 //    FullPage = true  // Captura toda la página
                 //});
 
-                // Capturar las imágenes por partes
-                var tempImagePaths = await CapturePageScreenshotsAsync((Page)page);
-
-                // Convertir las imágenes en un archivo TIFF
-                CreateTiffFromImages(tempImagePaths, outputTiffPath);
-
-                // Eliminar las imágenes temporales
-                CleanupTemporaryImages(tempImagePaths); 
-
-                await browser.CloseAsync();
+                var tempImagePaths = CapturePageScreenshotsAsync((Page)page);   // Capturar las imágenes por partes
+                CreateTiffFromImages(tempImagePaths, outputTiffPath);                 // Convertir las imágenes en un archivo TIFF
+                CleanupTemporaryImages(tempImagePaths);                               // Eliminar las imágenes temporales
             }
             catch
             {
                 throw;
             }
-
         }
+
+        //// Método que gestiona la creación de navegadores y la conversión de HTML a TIFF
+        //public async Task ConvertHtmlToTiffAsync(string htmlFilePath, string outputTiffPath)
+        //{
+        //    var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+        //    var page = (Page)await browser.NewPageAsync();                                               // Crear una página para este navegador
+
+        //    await ConvertHtmlToTiffInternalAsync(page, htmlFilePath, outputTiffPath);                // Cargar el contenido HTML y realizar la conversión a TIFF
+
+        //    await browser.CloseAsync();
+        //    await page.CloseAsync();            
+        //}
+
+        //public async Task ConvertHtmlToTiffInternalAsync(Page page, string htmlFilePath, string outputTiffPath)
+        //{
+        //    try
+        //    {
+        //        var htmlContent = File.ReadAllText(htmlFilePath);            // lee el html
+        //        await page.SetContentAsync(htmlContent);
+
+        //        await Task.Delay(2000);
+
+        //        // Establecer el tamaño de la vista de la página
+        //        await page.SetViewportAsync(new ViewPortOptions
+        //        {
+        //            Width = _pageWidth,
+        //            Height = _pageHeight
+        //        });
+
+        //        // Esperar a que el documento esté completamente cargado
+        //        await page.WaitForFunctionAsync("() => document.readyState === 'complete'");
+
+        //        // Verificar que el contenedor principal está presente y visible
+        //        //await page.WaitForSelectorAsync(".container");
+        //        await page.WaitForFunctionAsync("() => { const container = document.querySelector('.container'); return container && container.offsetHeight > 0; }");
+
+        //        // Asegúrate de que hay contenido en el encabezado y al menos una sección
+        //        await page.WaitForFunctionAsync("() => { const headerText = document.querySelector('.header').innerText; const sections = document.querySelectorAll('.section'); return headerText.trim().length > 0 && sections.length > 0; }");
+
+        //        await page.WaitForFunctionAsync("() => document.readyState === 'complete' && Array.from(document.images).every(img => img.complete)");
+
+        //        await Task.Delay(2000);
+
+        //        ///// DEBUG
+        //        ////// Capturar la imagen de la página completa
+        //        //var screenshotPath = Path.Combine(_outputFolderPath, $"{Path.GetFileNameWithoutExtension(outputTiffPath)}_test.png");
+        //        //await page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
+        //        //{
+        //        //    FullPage = true  // Captura toda la página
+        //        //});
+
+        //        var tempImagePaths = await CapturePageScreenshotsAsync((Page)page);   // Capturar las imágenes por partes
+        //        CreateTiffFromImages(tempImagePaths, outputTiffPath);                 // Convertir las imágenes en un archivo TIFF
+        //        CleanupTemporaryImages(tempImagePaths);                               // Eliminar las imágenes temporales
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
+
+
 
         private void EnsureOutputDirectoryExists()
         {
@@ -146,7 +233,7 @@ namespace ServiceEmailSendValidation.Converters
 
         #region "Funciones"
 
-        private async Task<List<string>> CapturePageScreenshotsAsync(Page page)
+        private List<string> CapturePageScreenshotsAsync(Page page)
         {
             var tempImagePaths = new List<string>();
             var tempImageCorrectPaths = new List<string>();
@@ -155,7 +242,7 @@ namespace ServiceEmailSendValidation.Converters
             Guid identifier = Guid.NewGuid();
 
             // Obtener la posición superior e inferior de todas las líneas de texto visibles en la página
-            var linePositions = await page.EvaluateFunctionAsync<List<Dictionary<string, int>>>(@"
+            var linePositions = page.EvaluateFunctionAsync<List<Dictionary<string, int>>>(@"
                  () => {
                      const lines = [];
                      const elements = document.querySelectorAll('p, h1, h2, h3, div, span, td, th, table, li, a, b, strong, i, em'); // Seleccionar más elementos de texto
@@ -170,7 +257,7 @@ namespace ServiceEmailSendValidation.Converters
                      });
                      return lines;
                  }
-             ");
+             ").GetAwaiter().GetResult();  // Convertir a llamada sincrónica
 
             int previousPageHeight = 0;
             var bottomValue = linePositions[0]["bottom"];
@@ -188,8 +275,8 @@ namespace ServiceEmailSendValidation.Converters
 
                 var screenshotPath = Path.Combine(_outputFolderPath, $"{identifier}_{currentPage}.png");        // Definir la ruta para la captura de pantalla
 
-                var bodyHeight = await page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight"); // Obtiene el valor mayor de hight renderizado
-                bool isBodyMax = bodyHeight <= (_pageHeight * currentPage);                                 // Evaluar si hay más contenido para capturar  
+                var bodyHeight = page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight").GetAwaiter().GetResult(); // Obtener el valor sincrónicamente
+                bool isBodyMax = bodyHeight <= (_pageHeight * currentPage);                                                    // Evaluar si hay más contenido para capturar  
 
                 // Calcular la altura y posición de la página a capturar
                 int pageHeight = (currentPage == 1) ? lastVisibleLineY : lastVisibleLineY - previousPageHeight;
@@ -200,7 +287,7 @@ namespace ServiceEmailSendValidation.Converters
                 previousPageHeight = (currentPage == 1) ? pageHeight : (previousPageHeight + pageHeight);
 
                 // Capturar la imagen de la vista actual
-                await page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
+                page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
                 {
                     Clip = new Clip
                     {
@@ -210,7 +297,7 @@ namespace ServiceEmailSendValidation.Converters
                         Height = pageHeight
                     },
                     FullPage = false
-                });
+                }).GetAwaiter().GetResult();  // Convertir a llamada sincrónica
 
                 tempImagePaths.Add(screenshotPath);
 
@@ -221,7 +308,7 @@ namespace ServiceEmailSendValidation.Converters
                 }
                 else
                 {
-                    await page.EvaluateExpressionAsync($"window.scrollTo(0, {lastVisibleLineY});");
+                    page.EvaluateExpressionAsync($"window.scrollTo(0, {lastVisibleLineY});").GetAwaiter().GetResult();  // Convertir a llamada sincrónica
                     currentPage++;
                 }
             }
@@ -309,140 +396,6 @@ namespace ServiceEmailSendValidation.Converters
                 throw;
             }
         }
-
-        /* Original 
-        private async Task<List<string>> CapturePageScreenshotsAsync(Page page)
-        {
-            try
-            {
-                var tempImagePaths = new List<string>();
-                var tempImageCorrectPaths = new List<string>();
-                int currentPage = 1;
-                bool hasMoreContent = true;
-
-                const int margin = 20; // Ajusta este valor según sea necesario
-
-                while (hasMoreContent)
-                {
-                    var screenshotPath = Path.Combine(_outputFolderPath, $"temp_page{currentPage}.png");
-
-                    // Capturar la imagen de la vista actual
-                    await page.ScreenshotAsync(screenshotPath, new ScreenshotOptions
-                    {
-                        Clip = new Clip
-                        {
-                            X = 0,
-                            Y = (currentPage - 1) * (_pageHeight - margin),//_pageHeight,
-                            Width = _pageWidth,
-                            Height = _pageHeight - margin
-                        },
-                        FullPage = false
-                    });
-
-                    tempImagePaths.Add(screenshotPath);
-
-                    // Evaluar si hay más contenido para capturar
-                    var bodyHeight = await page.EvaluateExpressionAsync<double>(@"document.body.scrollHeight");
-                    if (bodyHeight <= _pageHeight * currentPage)
-                    {
-                        hasMoreContent = false;
-                    }
-                    else
-                    {
-                        await page.EvaluateExpressionAsync(@"window.scrollBy(0, window.innerHeight)");
-                        currentPage++;
-                    }
-                }
-
-                // Ajustar la primera imagen para agregar espacio en blanco en la parte inferior
-                if (tempImagePaths.Count > 0)
-                {
-                    var firstImagePath = tempImagePaths[0];
-                    string newImagePath = AdjustImageForMargin(firstImagePath, margin, isBottom: true);
-                    tempImageCorrectPaths.Add(newImagePath);
-                }
-
-                // Ajustar las imágenes intermedias para agregar espacio en blanco en la parte superior e inferior
-                for (int i = 1; i < tempImagePaths.Count - 1; i++)
-                {
-                    var imagePath = tempImagePaths[i];
-                    string newImagePath = AdjustImageForMargin(imagePath, margin, isBottom: true, isTop: true);
-                    tempImageCorrectPaths.Add(newImagePath);
-                }
-
-                // Ajustar la última imagen para agregar espacio en blanco en la parte superior
-                if (tempImagePaths.Count > 1)
-                {
-                    var lastImagePath = tempImagePaths.Last();
-                    string newImagePath = AdjustImageForMargin(lastImagePath, margin, isBottom: false);
-                    tempImageCorrectPaths.Add(newImagePath);
-                }
-
-                CleanupTemporaryImages(tempImagePaths);
-
-                return tempImageCorrectPaths;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }*/
-
-        /* Original
-        private string AdjustImageForMargin(string imagePath, int margin, bool isBottom, bool isTop = false)
-        {
-            try
-            {
-                using (var image = System.Drawing.Image.FromFile(imagePath))
-                {
-                    // Definir el tamaño de la nueva imagen
-                    var newWidth = image.Width;
-                    var newHeight = image.Height + margin;
-
-                    if (isTop)
-                    {
-                        newHeight += margin; // Agregar margen en la parte superior
-                    }
-                    if (isBottom)
-                    {
-                        newHeight += margin; // Agregar margen en la parte inferior
-                    }
-
-                    using (var newImage = new Bitmap(newWidth, newHeight))
-                    using (var graphics = Graphics.FromImage(newImage))
-                    {
-                        // Rellenar con blanco
-                        graphics.Clear(Color.White);
-
-                        // Copiar la imagen original sobre el nuevo lienzo
-                        //graphics.DrawImage(image, 0, isBottom ? 0 : margin, image.Width, image.Height);
-
-                        // Calcular la posición de la imagen original en la nueva imagen
-                        int x = 0;
-                        int y = margin;
-
-                        if (isTop)
-                        {
-                            y += margin; // Ajustar la posición si se agrega margen en la parte superior
-                        }
-
-                        // Dibujar la imagen original sobre la nueva imagen
-                        graphics.DrawImage(image, x, y);
-
-                        string newImagePath = Path.Combine(Path.GetDirectoryName(imagePath), "modified_" + Path.GetFileName(imagePath));
-
-                        newImage.Save(newImagePath, System.Drawing.Imaging.ImageFormat.Png);
-                        return newImagePath;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }*/
-
         #endregion
     }
 }

@@ -1,4 +1,6 @@
 ﻿using DBTools.SchemaMail;
+using PuppeteerSharp;
+using ServiceEmailSendValidation.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -32,7 +34,7 @@ namespace EmailSendValidationService.Servicio
         #endregion
 
         #region " Metodos "
-        public void AgregarHilo(DBTools.SchemaMail.TBL_Tracking_MailRow nTransferenciarow)
+        public void AgregarHilo(DBTools.SchemaMail.TBL_Tracking_MailRow nTransferenciarow, ref IBrowser _browser)
         {
             if (!TieneHiloslibres())
             {
@@ -46,8 +48,10 @@ namespace EmailSendValidationService.Servicio
                 } while (true);
             }
 
+            // Crear el objeto de parámetros
+            ThreadsParameters parameters = new ThreadsParameters(nTransferenciarow, _browser);
             Thread Threads = new Thread(new ParameterizedThreadStart(servicio.ProcesoPrincipalHilo)); // especifica el metodo que será ejecutado por el hilo
-            Threads.Start(nTransferenciarow);
+            Threads.Start(parameters);
 
             lock (objLock)
             {

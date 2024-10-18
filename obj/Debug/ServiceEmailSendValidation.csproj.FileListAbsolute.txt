@@ -32,6 +32,7 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\ServiceEmailSendValidation.exe
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\ServiceEmailSendValidation.pdb
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\HtmlAgilityPack.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\ICSharpCode.SharpZipLib.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Magick.NET-Q16-AnyCPU.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Magick.NET.Core.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
@@ -49,6 +50,8 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Miharu.MailSender.DataAccess.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Miharu.Security.DataAccess.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Npgsql.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PDFLibrary.dll
+C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PdfSharp.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PuppeteerSharp.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\SLYG.Data.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Slyg.Tools.dll
@@ -65,8 +68,6 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Microsoft.ReportViewer.WinForms.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\GdPicture.NET.12.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Gios.PSM.dll
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PdfSharp.dll
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\PDFLibrary.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\Microsoft.ReportViewer.Common.dll
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\HtmlAgilityPack.xml
@@ -96,4 +97,3 @@ C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceE.7AC1FADF.Up2Date
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.exe
 C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\obj\Debug\ServiceEmailSendValidation.pdb
-C:\Users\duvan.castro\source\repos\MailSenderSolution\ServiceEmailSendValidation\bin\Debug\ICSharpCode.SharpZipLib.dll

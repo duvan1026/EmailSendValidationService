@@ -28,6 +28,8 @@ using System.Globalization;
 using Slyg.Tools.Imaging;
 using ServiceEmailSendValidation.GenerarCartas;
 using Slyg.Data.Schemas;
+using PuppeteerSharp;
+using ServiceEmailSendValidation.Models;
 
 namespace EmailSendValidationService
 {
@@ -123,6 +125,9 @@ namespace EmailSendValidationService
         {
             try
             {
+                //Descarga y configuración de Puppeteer
+                DescargarChromium();
+
                 while (!stopRequested)
                 {
                     try
@@ -157,32 +162,67 @@ namespace EmailSendValidationService
                                 // Validar por entidad y proyecto si se encuentra en dia habil.
                                 if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
                                 {
+                                    IBrowser _browser = null; // Navegador global
 
-                                    DBTools.SchemaMail.TBL_Tracking_MailDataTable filtertrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
-
-                                    trakingMailTable
-                                        .Where(row => row.fk_Entidad == item.fk_Entidad && row.fk_Proyecto == item.fk_Proyecto )
-                                        .OrderBy(x => x.fk_Entidad)
-                                        .ThenBy(x => x.fk_Proyecto)
-                                        .ThenBy(x => x.fk_Expediente)
-                                        .CopyToDataTable()
-                                        .Rows                                                           // divide en filas
-                                        .Cast<DataRow>()
-                                        .ToList()
-                                        .ForEach(row => filtertrackingMail.ImportRow(row));    // almacena cada fila en una fila de distinctDashboardCapturasTable
-
-                                    ProcesadorHilos procesadorHilosInstance = new ProcesadorHilos();
-                                    procesadorHilosInstance.servicio = this;
-
-                                    foreach (var itemfiltertrackingMail in filtertrackingMail)
+                                    try
                                     {
-                                        procesadorHilosInstance.AgregarHilo(itemfiltertrackingMail);
-                                    }
+                                        DateTime startTime = DateTime.Now;   // Tiempo de incio para el procesamiento de la información.
+                                        _browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).GetAwaiter().GetResult();
 
-                                    while (!procesadorHilosInstance.TerminoHilos())
-                                    {
-                                        System.Threading.Thread.Sleep(100);
+                                        DBTools.SchemaMail.TBL_Tracking_MailDataTable filtertrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
+
+                                        trakingMailTable
+                                            .Where(row => row.fk_Entidad == item.fk_Entidad && row.fk_Proyecto == item.fk_Proyecto)
+                                            .OrderBy(x => x.fk_Entidad)
+                                            .ThenBy(x => x.fk_Proyecto)
+                                            .ThenBy(x => x.fk_Expediente)
+                                            .CopyToDataTable()
+                                            .Rows                                                           // divide en filas
+                                            .Cast<DataRow>()
+                                            .ToList()
+                                            .ForEach(row => filtertrackingMail.ImportRow(row));    // almacena cada fila en una fila de distinctDashboardCapturasTable
+
+                                        ProcesadorHilos procesadorHilosInstance = new ProcesadorHilos();
+                                        procesadorHilosInstance.servicio = this;
+
+                                        foreach (var itemfiltertrackingMail in filtertrackingMail)
+                                        {
+                                            procesadorHilosInstance.AgregarHilo(itemfiltertrackingMail, ref _browser);
+
+                                            // Evalua que el procesamiento de hilos no exceda la hora habil luego de 10 minutos
+                                            if ((DateTime.Now - startTime).TotalMinutes > 10)
+                                            {
+                                                // Evaluar si es hora habil nuevamente
+                                                if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
+                                                {
+                                                    startTime = DateTime.Now;  // Reiniciar el tiempo de inicio
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        // Esperar a que todos los hilos terminen
+                                        while (!procesadorHilosInstance.TerminoHilos())
+                                        {
+                                            System.Threading.Thread.Sleep(100);
+                                        }
+
                                     }
+                                    catch 
+                                    {
+                                        throw;
+                                    }
+                                    finally
+                                    {
+                                        // Cerrar el navegador al final de la aplicación
+                                        if (_browser != null)
+                                        {
+                                            _browser.CloseAsync().GetAwaiter().GetResult();
+                                        }
+                                    }                                    
                                 }
                             }                                
                         }
@@ -204,17 +244,37 @@ namespace EmailSendValidationService
             }
         }
 
+        // descarga sincrónica de Chromium // Para renderizar html imagenes evidencia correo
+        private void DescargarChromium()
+        {
+
+            try
+            {
+                var browserFetcher = new BrowserFetcher();            
+                browserFetcher.DownloadAsync().GetAwaiter().GetResult();  // Descarga Chromium de forma sincrónica en la respectiva version dada
+            }
+            catch (Exception ex)
+            {
+                dataLog.AddErrorEntry("Error al descargar Chromium: " + ex.ToString());
+            }
+        }
+
         public void ProcesoPrincipalHilo(Object nParametroHilo)
         {
             string fk_expediente = string.Empty;
 
             try
             {
-                var parameters1 = (DBTools.SchemaMail.TBL_Tracking_MailRow)nParametroHilo;
+                ThreadsParameters ThreadParameter = (ThreadsParameters)nParametroHilo;
+
+                //var parameters1 = (DBTools.SchemaMail.TBL_Tracking_MailRow)nParametroHilo;
+                var parameters1 = ThreadParameter.TransferenciaRow;
+                var _browser = ThreadParameter.Browser;
+
                 fk_expediente = parameters1.fk_Expediente.ToString();
 
                 GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
-                generarImagenEmail.GenerarCartas(parameters1);
+                generarImagenEmail.GenerarCartas(parameters1,ref _browser);
 
             }
             catch (Exception ex)

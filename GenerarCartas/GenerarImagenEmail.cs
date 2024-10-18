@@ -25,6 +25,7 @@ using ServiceEmailSendValidation.Converters;
 using System.Net.Http;
 using DBTools;
 using EmailSendValidationService.Config;
+using PuppeteerSharp;
 //using static Miharu.Desktop.Library.Config.DesktopConfig;
 
 namespace ServiceEmailSendValidation.GenerarCartas
@@ -58,7 +59,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
         #region "Metodos"
 
-        public void GenerarCartas(DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail)
+        public void GenerarCartas(DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail,ref IBrowser _browser)
         {
             DBCoreDataBaseManager dbmCore = null;
             DBImagingDataBaseManager dbmImaging = null;
@@ -156,8 +157,10 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             var pageWidth = Program.ConnectionParameterSystemStrings.EmailEvidencePageWidth;
                             var pageHeigth = Program.ConnectionParameterSystemStrings.EmailEvidencePageHeigth;
                             var marginTop = Program.ConnectionParameterSystemStrings.ValueDefaultMarginTop;
+                            
                             var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop);   // Instanciar el convertidor                            
-                            converter.ConvertHtmlToTiffAsync(htmlFilePath, fileName).GetAwaiter().GetResult();    // Convertir HTML a TIFF
+                            converter.ConvertHtmlToTiff(htmlFilePath, fileName, ref _browser);                                   // Convertir HTML a TIFF
+                            
 
                             short folios = (short)ImageManager.GetFolios(fileName);
                             var FolioBitmap = ImageManager.GetFolioBitmap(fileName, folios);
