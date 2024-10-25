@@ -29,6 +29,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -195,6 +196,357 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\ABOUT" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\headless_command_resources.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\headless_lib_data.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\headless_lib_strings.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-af.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-as.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-be.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-bg.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-bn.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-cs.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-cu.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-cy.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-da.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-de-1901.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-de-1996.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-de-ch-1901.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-el.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-en-gb.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-en-us.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-es.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-et.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-eu.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-fr.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-ga.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-gl.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-gu.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-hi.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-hr.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-hu.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-hy.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-it.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-ka.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-kn.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-la.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-lt.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-lv.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-ml.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-mn-cyrl.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-mr.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-mul-ethi.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-nb.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-nl.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-nn.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-or.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-pa.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-pt.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-ru.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-sk.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-sl.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-sq.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-sv.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-ta.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-te.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-tk.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-uk.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\hyphen-data\hyph-und-ethi.hyb" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\icudtl.dat" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\LICENSE.headless_shell" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\af.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\am.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ar.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\bg.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\bn.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ca.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\cs.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\da.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\de.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\el.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\en-GB.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\en-US.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\es-419.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\es.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\et.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\fa.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\fi.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\fil.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\fr.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\gu.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\he.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\hi.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\hr.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\hu.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\id.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\it.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ja.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\kn.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ko.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\lt.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\lv.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ml.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\mr.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ms.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\nb.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\nl.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\pl.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\pt-BR.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\pt-PT.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ro.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ru.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\sk.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\sl.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\sr.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\sv.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\sw.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ta.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\te.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\th.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\tr.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\uk.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\ur.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\vi.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\zh-CN.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\locales\zh-TW.pak" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\PrivacySandboxAttestationsPreloaded\manifest.json" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\PrivacySandboxAttestationsPreloaded\privacy-sandbox-attestations.dat" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\resources\accessibility\reading_mode_gdocs_helper_manifest.json" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\v8_context_snapshot.bin" />
+    <None Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\vk_swiftshader_icd.json" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\128.0.6613.119.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\ABOUT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_100_percent.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_200_percent.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\debug.log" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\First Run" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-af.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-as.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-be.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-bg.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-bn.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-cs.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-cu.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-cy.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-da.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-de-1901.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-de-1996.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-de-ch-1901.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-el.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-en-gb.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-en-us.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-es.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-et.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-eu.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-fr.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-ga.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-gl.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-gu.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-hi.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-hr.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-hu.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-hy.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-it.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-ka.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-kn.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-la.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-lt.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-lv.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-ml.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-mn-cyrl.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-mr.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-mul-ethi.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-nb.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-nl.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-nn.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-or.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-pa.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-pt.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-ru.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-sk.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-sl.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-sq.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-sv.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-ta.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-te.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-tk.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-uk.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\hyph-und-ethi.hyb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\hyphen-data\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\icudtl.dat" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\af.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\am.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ar.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\bg.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\bn.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ca.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\cs.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\da.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\de.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\el.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\en-GB.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\en-US.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\es-419.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\es.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\et.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\fa.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\fi.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\fil.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\fr.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\gu.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\he.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\hi.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\hr.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\hu.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\id.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\it.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ja.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\kn.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ko.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\lt.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\lv.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ml.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\mr.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ms.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\nb.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\nl.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\pl.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\pt-BR.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\pt-PT.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ro.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ru.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\sk.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\sl.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\sr.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\sv.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\sw.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ta.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\te.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\th.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\tr.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\uk.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\ur.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\vi.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\zh-CN.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\locales\zh-TW.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\MEIPreload\manifest.json" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\MEIPreload\preloaded_data.pb" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\PrivacySandboxAttestationsPreloaded\manifest.json" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\PrivacySandboxAttestationsPreloaded\privacy-sandbox-attestations.dat" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\resources.pak" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\resources\accessibility\reading_mode_gdocs_helper_manifest.json" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\v8_context_snapshot.bin" />
+    <None Include="Chrome\Win64-128.0.6613.119\chrome-win64\vk_swiftshader_icd.json" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\DBTools.SchemaConfig.CTA_Email_ImagenDataTable.datasource" />
     <None Include="Properties\DataSources\DBTools.SchemaConfig.CTA_Email_ImagenEnum.datasource" />
@@ -271,6 +623,32 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\chrome-headless-shell.exe" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\libEGL.dll" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\libGLESv2.dll" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\resources\accessibility\reading_mode_gdocs_helper\content.js" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\resources\accessibility\reading_mode_gdocs_helper\gdocs_script.js" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\vk_swiftshader.dll" />
+    <Content Include="ChromeHeadlessShell\Win64-128.0.6613.119\chrome-headless-shell-win64\vulkan-1.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_elf.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_proxy.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_pwa_launcher.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\chrome_wer.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\D3DCompiler_47.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\dxcompiler.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\dxil.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\elevation_service.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\libEGL.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\libGLESv2.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\mojo_core.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\notification_helper.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\resources\accessibility\reading_mode_gdocs_helper\content.js" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\resources\accessibility\reading_mode_gdocs_helper\gdocs_script.js" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\setup.exe" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\vk_swiftshader.dll" />
+    <Content Include="Chrome\Win64-128.0.6613.119\chrome-win64\vulkan-1.dll" />
     <Content Include="FreeImage.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

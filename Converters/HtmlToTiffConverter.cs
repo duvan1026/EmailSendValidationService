@@ -12,6 +12,8 @@ using System.Threading;
 using System.Collections.Concurrent;
 using EmailSendValidationService;
 using PuppeteerSharp.BrowserData;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+using EmailSendValidationService.Logs;
 //using OpenQA.Selenium;
 //using OpenQA.Selenium.Chrome;
 
@@ -25,6 +27,9 @@ namespace ServiceEmailSendValidation.Converters
         private readonly int _pageWidth;
         private readonly int _pageHeight;
         private readonly int _defaultMarginTop;
+        protected Logs _DataLog;
+        private readonly IBrowser _browser;
+        private readonly object _browserLock = new object();
 
         //private static readonly object _lockObject = new object();  // Objeto para sincronizar el acceso a escritura DBTools y asegurar ejecución por un solo hilo a la vez.
 
@@ -32,33 +37,44 @@ namespace ServiceEmailSendValidation.Converters
 
         #region "Constructores"
 
-        public HtmlToTiffConverter(string outputFolderPath, int pageWidth, int pageHeight, int defaultMarginTop)
+        public HtmlToTiffConverter(string outputFolderPath, int pageWidth, int pageHeight, int defaultMarginTop, Logs dataLog, IBrowser browser)
         {
+            _DataLog = dataLog;
             _outputFolderPath = outputFolderPath;
             _pageWidth = pageWidth;
             _pageHeight = pageHeight;
             _defaultMarginTop = defaultMarginTop;
+            _browser = browser;
         }
 
         #endregion
 
         #region "Metodos"
 
-        public void ConvertHtmlToTiff(string htmlFilePath, string outputTiffPath, ref IBrowser browser)
+        public void ConvertHtmlToTiff(string htmlFilePath, string outputTiffPath)
         {
-            //IBrowser browser = null;
             IPage page = null;
 
             try
             {
-                // Lanzar el navegador sincrónicamente
-                //browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).GetAwaiter().GetResult();
+                if (_browser != null)
+                {
+                    lock (_browserLock)
+                    {
+                        // Abrir una nueva página sincrónicamente
+                        page = _browser.NewPageAsync().GetAwaiter().GetResult();
+                    }
 
-                // Abrir una nueva página sincrónicamente
-                page = browser.NewPageAsync().GetAwaiter().GetResult();
+                    // Establecer el tiempo de espera para la página
+                    page.DefaultTimeout = 300000; // Establecer el tiempo de espera a 5 minutos (300,000 ms)
 
-                // Llamar al método interno que realiza la conversión (también necesitas una versión sincrónica)
-                ConvertHtmlToTiffInternal((Page)page, htmlFilePath, outputTiffPath);
+                    // Llamar al método interno que realiza la conversión (también necesitas una versión sincrónica)
+                    ConvertHtmlToTiffInternal((Page)page, htmlFilePath, outputTiffPath);
+                }
+                else
+                {
+                    _DataLog.AddErrorEntry("[Error] No se tiene valor para la instancia del navegador, por lo tanto no se puede crear la pagina para el Render del HTML");
+                }
             }
             catch (Exception ex)
             {
@@ -69,13 +85,16 @@ namespace ServiceEmailSendValidation.Converters
                 // Asegurarse de cerrar la página y el navegador
                 if (page != null)
                 {
-                    page.CloseAsync().GetAwaiter().GetResult();
+                    try
+                    {
+                        page.CloseAsync().GetAwaiter().GetResult();
+                        page.DisposeAsync().GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        _DataLog.AddErrorEntry("[Error] Error closing page: " + ex.Message);
+                    }
                 }
-
-                //if (browser != null)
-                //{
-                //    browser.CloseAsync().GetAwaiter().GetResult();
-                //}
             }
         }
 
@@ -84,7 +103,7 @@ namespace ServiceEmailSendValidation.Converters
             try
             {
                 var htmlContent = File.ReadAllText(htmlFilePath);            // lee el html
-                page.SetContentAsync(htmlContent);
+                page.SetContentAsync(htmlContent).GetAwaiter().GetResult();
 
                 System.Threading.Thread.Sleep(2000);
 
@@ -118,7 +137,7 @@ namespace ServiceEmailSendValidation.Converters
                 //    FullPage = true  // Captura toda la página
                 //});
 
-                var tempImagePaths = CapturePageScreenshotsAsync((Page)page);   // Capturar las imágenes por partes
+                var tempImagePaths = CapturePageScreenshots((Page)page);   // Capturar las imágenes por partes
                 CreateTiffFromImages(tempImagePaths, outputTiffPath);                 // Convertir las imágenes en un archivo TIFF
                 CleanupTemporaryImages(tempImagePaths);                               // Eliminar las imágenes temporales
             }
@@ -233,7 +252,7 @@ namespace ServiceEmailSendValidation.Converters
 
         #region "Funciones"
 
-        private List<string> CapturePageScreenshotsAsync(Page page)
+        private List<string> CapturePageScreenshots(Page page)
         {
             var tempImagePaths = new List<string>();
             var tempImageCorrectPaths = new List<string>();

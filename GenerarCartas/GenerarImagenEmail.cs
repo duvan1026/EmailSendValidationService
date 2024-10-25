@@ -129,6 +129,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                             // Actualiza data en TBL_queue y TBL_TrackingMail para enviar correo
                             var sendEmailDate = ProcessEmailQueueAndUpdateTracking(itemfiltertrackingMail);
+                            //var sendEmailDate = DateTime.Now;
 
                             // Construcción de rutas de archivo
                             string fullPath = Path.Combine(Program.AppPath, Program.TempPath);
@@ -158,8 +159,8 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             var pageHeigth = Program.ConnectionParameterSystemStrings.EmailEvidencePageHeigth;
                             var marginTop = Program.ConnectionParameterSystemStrings.ValueDefaultMarginTop;
                             
-                            var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop);   // Instanciar el convertidor                            
-                            converter.ConvertHtmlToTiff(htmlFilePath, fileName, ref _browser);                                   // Convertir HTML a TIFF
+                            var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop, _DataLog, _browser);   // Instanciar el convertidor                            
+                            converter.ConvertHtmlToTiff(htmlFilePath, fileName);                                   // Convertir HTML a TIFF
                             
 
                             short folios = (short)ImageManager.GetFolios(fileName);

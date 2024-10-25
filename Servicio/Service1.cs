@@ -126,7 +126,7 @@ namespace EmailSendValidationService
             try
             {
                 //Descarga y configuración de Puppeteer
-                DescargarChromium();
+                //DescargarChromium();
 
                 while (!stopRequested)
                 {
@@ -162,12 +162,11 @@ namespace EmailSendValidationService
                                 // Validar por entidad y proyecto si se encuentra en dia habil.
                                 if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
                                 {
-                                    IBrowser _browser = null; // Navegador global
+                                    IBrowser _browser = InitializeBrowser(); // Navegador global
 
                                     try
                                     {
                                         DateTime startTime = DateTime.Now;   // Tiempo de incio para el procesamiento de la información.
-                                        _browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).GetAwaiter().GetResult();
 
                                         DBTools.SchemaMail.TBL_Tracking_MailDataTable filtertrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
 
@@ -213,16 +212,14 @@ namespace EmailSendValidationService
                                     }
                                     catch 
                                     {
+                                        // Cerrar el navegador al final de la aplicación
+                                        CloseBrowser(ref _browser);
                                         throw;
                                     }
                                     finally
                                     {
-                                        // Cerrar el navegador al final de la aplicación
-                                        if (_browser != null)
-                                        {
-                                            _browser.CloseAsync().GetAwaiter().GetResult();
-                                        }
-                                    }                                    
+                                        CloseBrowser(ref _browser);
+                                    }
                                 }
                             }                                
                         }
@@ -240,7 +237,55 @@ namespace EmailSendValidationService
             catch (Exception ex)
             {
                 dataLog.AddErrorEntry("**TERMINACIÓN HILO PRINCIPAL**: Se ha producido un error durante la ejecución del hilo principal del servicio. Detalles del error: " + ex.ToString());
-                //dataLog.WriteErrorLog("Error Proceso ex: " + ex.ToString());
+            }
+        }
+
+        private IBrowser InitializeBrowser()
+        {
+            IBrowser _browser = null; // Navegador global
+
+            try
+            {
+                _browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).GetAwaiter().GetResult();
+
+                var pages = _browser.PagesAsync().GetAwaiter().GetResult(); // Obtener todas las páginas
+                foreach (var page in pages)
+                {
+                    page.CloseAsync().GetAwaiter().GetResult(); // Cerrar cada página
+                }
+
+                return _browser;
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        // cierra el navegador
+        public void CloseBrowser(ref IBrowser _browser)
+        {
+            try
+            {
+                // Cerrar todas las páginas abiertas
+                if (_browser != null)
+                {
+                    var pages = _browser.PagesAsync().GetAwaiter().GetResult(); // Obtener todas las páginas
+                    foreach (var page in pages)
+                    {
+                        page.CloseAsync().GetAwaiter().GetResult(); // Cerrar cada página
+                    }
+
+                    // cerrar el navegador
+                    _browser.CloseAsync().GetAwaiter().GetResult();
+                    _browser = null; // Limpiar la referencia
+                }
+            }
+            catch (Exception ex)
+            {
+                //dataLog.AddErrorEntry("[Error] Al cerrar el navegador: " + ex.Message);
+                throw;
             }
         }
 
