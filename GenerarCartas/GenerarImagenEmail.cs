@@ -227,12 +227,14 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                                                 if (folio == 1)
                                                 {
+                                                    Guid guidImage = Guid.NewGuid();
+
                                                     var fileImgType = new DBCore.SchemaImaging.TBL_FileType();
                                                     fileImgType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
                                                     fileImgType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
                                                     fileImgType.fk_File = fileImageEmail;
                                                     fileImgType.id_Version = 1;
-                                                    fileImgType.File_Unique_Identifier = Guid.NewGuid();
+                                                    fileImgType.File_Unique_Identifier = guidImage;
                                                     fileImgType.Folios_Documento_File = (short)(folios + _ImageCount);
                                                     fileImgType.Tamaño_Imagen_File = 0;
                                                     fileImgType.Nombre_Imagen_File = "";
@@ -255,7 +257,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     fileProcesType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
                                                     fileProcesType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
                                                     fileProcesType.id_File = fileImageEmail;
-                                                    fileProcesType.File_Unique_Identifier = Guid.NewGuid();
+                                                    fileProcesType.File_Unique_Identifier = guidImage;
                                                     fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
                                                     fileProcesType.Folios_File = ((SlygNullable<short>)(folios + _ImageCount));
                                                     fileProcesType.Monto_File = 0;
