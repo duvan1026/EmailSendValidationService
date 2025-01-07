@@ -15,6 +15,7 @@ ChromeHeadlessShell/Win64-128.0.6613.119/
 bin/
 obj/
 *.pdb
+file-size.txt
 
 # User-specific files
 *.rsuser
