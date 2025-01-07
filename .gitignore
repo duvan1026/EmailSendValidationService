@@ -7,6 +7,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Build artifacts
+bin/
+obj/
+*.pdb
+
 # User-specific files
 *.rsuser
 *.suo
@@ -379,12 +384,9 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+# Visual Studio files
+.vs/
+*.csproj.user
 
 # Local History for Visual Studio Code
 .history/
