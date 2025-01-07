@@ -159,13 +159,11 @@ namespace ServiceEmailSendValidation.GenerarCartas
                             var pageHeigth = Program.ConnectionParameterSystemStrings.EmailEvidencePageHeigth;
                             var marginTop = Program.ConnectionParameterSystemStrings.ValueDefaultMarginTop;
                             
-                            var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop, _DataLog, _browser);   // Instanciar el convertidor                            
-                            converter.ConvertHtmlToTiff(htmlFilePath, fileName);                                   // Convertir HTML a TIFF
+                            var converter = new HtmlToTiffConverter(fullPath, pageWidth, pageHeigth, marginTop, _DataLog, _browser);  // Instanciar el convertidor                            
+                            converter.ConvertHtmlToTiff(htmlFilePath, fileName);                                                      // Convertir HTML a TIFF
                             
-
-                            short folios = (short)ImageManager.GetFolios(fileName);
-                            var FolioBitmap = ImageManager.GetFolioBitmap(fileName, folios);
-                            short fileImageEmail = (short)itemfiltertrackingMail.fk_File;
+                            short foliosImageEmail = (short)ImageManager.GetFolios(fileName);                                        // Folios de la evidencia de correo.
+                            short fileImageEmail = (short)itemfiltertrackingMail.fk_File;                                            // File Carta Respuesta tracking mail
 
                             var servidor = dbmImaging.SchemaCore.CTA_Servidor.DBFindByfk_Entidadid_Servidor(firstRowOTData.fk_Entidad_Servidor, firstRowOTData.fk_Servidor)[0].ToCTA_ServidorSimpleType();
                             var centro = dbmImaging.SchemaSecurity.CTA_Centro_Procesamiento.DBFindByfk_Entidadfk_Sedeid_Centro_Procesamiento(firstRowOTData.fk_Entidad_Procesamiento, firstRowOTData.fk_Sede_Procesamiento_Cargue, firstRowOTData.fk_Centro_Procesamiento_Cargue)[0].ToCTA_Centro_ProcesamientoSimpleType();
@@ -194,23 +192,31 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                             var formato = Utilities.GetEnumFormat(Program.ProyectoImagingRow.id_Formato_Imagen_Entrada.ToString());
                                             var compresion = Utilities.GetEnumCompression((DesktopConfig.FormatoImagenEnum)Program.ProyectoImagingRow.id_Formato_Imagen_Salida);
 
-                                            // Evalua el ultimo folio de ese expediente folder para almacenar la evidencia del correo
-                                            short lastFolio = EvaluateFolio(ref manager, itemfiltertrackingMail, fileImageEmail);
-                                            fileImageEmail = (short)(lastFolio + 1);
+                                            var dtFile = dbmCore.SchemaProcess.TBL_File.DBFindByfk_Expedientefk_Folder(itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder);
+                                            if (dtFile == null || dtFile.Count == 0) return;
 
-                                            for (int folio = 1; folio <= (folios + _ImageCount); folio++)
+                                            // Obtén el valor máximo de id_file
+                                            short maxIdFile = dtFile.Max(file => file.id_File);
+                                            fileImageEmail = (short)(maxIdFile + 1);
+
+                                            //// Evalua el ultimo folio de ese expediente folder para almacenar la evidencia del correo
+                                            //// cambiar nombre por file.
+                                            //short lastFolio = EvaluateFolio(ref manager, itemfiltertrackingMail, fileImageEmail);
+                                            //fileImageEmail = (short)(lastFolio + 1);
+
+                                            for (int folio = 1; folio <= (foliosImageEmail + _ImageCount); folio++)
                                             {
                                                 byte[] dataImage = null;
                                                 byte[] dataImageThumbnail = null;
 
-                                                if (folio <= folios)
+                                                if (folio <= foliosImageEmail)
                                                 {
                                                     dataImage = ImageManager.GetFolioData(fileName, folio, formato, compresion);
                                                     dataImageThumbnail = ImageManager.GetThumbnailData(fileName, folio, folio, MaxThumbnailWidth, MaxThumbnailHeight)[0];
                                                 }
                                                 else
                                                 {
-                                                    short currentFolio = (short)(folio - folios);
+                                                    short currentFolio = (short)(folio - foliosImageEmail);
                                                     manager.GetFolio(itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, (short)itemfiltertrackingMail.fk_File, _FileImagingRow.id_Version, currentFolio, ref dataImage, ref dataImageThumbnail);
                                                 }
 
@@ -222,8 +228,8 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                 //    fs.Close();
                                                 //}//////////////////////////////////////////
 
-                                                // Verifica que exista el file para proceder a actualizarlo o insertarlo
-                                                bool existFolio = ExistFolio(ref manager, itemfiltertrackingMail, fileImageEmail, (short)folio);
+                                                //// Verifica que exista el file para proceder a actualizarlo o insertarlo
+                                                //bool existFolio = ExistFolio(ref manager, itemfiltertrackingMail, fileImageEmail, (short)folio);
 
                                                 if (folio == 1)
                                                 {
@@ -235,7 +241,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     fileImgType.fk_File = fileImageEmail;
                                                     fileImgType.id_Version = 1;
                                                     fileImgType.File_Unique_Identifier = guidImage;
-                                                    fileImgType.Folios_Documento_File = (short)(folios + _ImageCount);
+                                                    fileImgType.Folios_Documento_File = (short)(foliosImageEmail + _ImageCount);
                                                     fileImgType.Tamaño_Imagen_File = 0;
                                                     fileImgType.Nombre_Imagen_File = "";
                                                     fileImgType.Key_Cargue_Item = "";
@@ -259,7 +265,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     fileProcesType.id_File = fileImageEmail;
                                                     fileProcesType.File_Unique_Identifier = guidImage;
                                                     fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
-                                                    fileProcesType.Folios_File = ((SlygNullable<short>)(folios + _ImageCount));
+                                                    fileProcesType.Folios_File = ((SlygNullable<short>)(foliosImageEmail + _ImageCount));
                                                     fileProcesType.Monto_File = 0;
                                                     fileProcesType.CBarras_File = itemfiltertrackingMail.fk_Expediente.ToString() + itemfiltertrackingMail.fk_Folder.ToString() + fileImageEmail;
 
@@ -274,6 +280,12 @@ namespace ServiceEmailSendValidation.GenerarCartas
 
                                                     lock (_lockObject)
                                                     {
+                                                        manager.CreateItem((long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida, identifier);
+                                                        dbmCore.SchemaImaging.TBL_File.DBInsert(fileImgType);
+                                                        dbmCore.SchemaProcess.TBL_File.DBInsert(fileProcesType);
+                                                        dbmCore.SchemaProcess.TBL_File_Estado.DBInsert(FileEstadoType);
+
+                                                        /*
                                                         // Validar que exista el file para proceder a actualizarlo o insertarlo                                                      
                                                         if (existFolio)
                                                         {
@@ -287,12 +299,14 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                             dbmCore.SchemaImaging.TBL_File.DBInsert(fileImgType);
                                                             dbmCore.SchemaProcess.TBL_File.DBInsert(fileProcesType);
                                                             dbmCore.SchemaProcess.TBL_File_Estado.DBInsert(FileEstadoType);
-                                                        }
+                                                        }*/
                                                     }
                                                 }
 
                                                 lock (_lockObject)
                                                 {
+                                                    manager.CreateFolio((long)itemfiltertrackingMail.fk_Expediente, (short)itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
+                                                    /*
                                                     // Validar que exista el file para proceder a actualizarlo o insertarlo                                                    
                                                     if (existFolio)
                                                     {
@@ -301,7 +315,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                     else
                                                     {
                                                         manager.CreateFolio((long)itemfiltertrackingMail.fk_Expediente, (short)itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
-                                                    }
+                                                    }*/
                                                 }
                                             }
                                         }                                        
@@ -493,7 +507,8 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                                                                     dataOTServidor.fk_Proyecto, 
                                                                                                     dataOTServidor.fk_fecha_proceso, 
                                                                                                     dataOTServidor.fk_fecha_proceso, 
-                                                                                                    dataOTServidor.fk_OT);
+                                                                                                    dataOTServidor.fk_OT,
+                                                                                                    -1);
 
                 // Verifica si la tabla es nula o no tiene filas
                 if (seguimientoCorreoDataTable == null || seguimientoCorreoDataTable.Rows.Count == 0) return null;
@@ -536,55 +551,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                     dbmTools.Connection_Open();
 
                     var currentDate = DateTime.Now;
-                    Guid guidQueue = Guid.NewGuid();  // Generar un nuevo Guid para el id_Queue
-
-                    // Insertamos en TBL_Queue para enviar email
-                    var dataTBLQueueType = new DBTools.SchemaMail.TBL_QueueType
-                    {
-                        id_Queue = guidQueue,
-                        fk_Entidad = itemfiltertrackingMail.fk_Entidad,
-                        fk_Usuario = itemfiltertrackingMail.fk_Usuario,
-                        Fecha_Queue = currentDate,  // Fecha actual
-                        EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
-                        CC_Queue = itemfiltertrackingMail.CC_Queue,
-                        CCO_Queue = itemfiltertrackingMail.CCO_Queue,
-                        Subject_Queue = itemfiltertrackingMail.Subject_Queue,
-                        Message_Queue = itemfiltertrackingMail.Message_Queue,
-                        Attach_Queue = itemfiltertrackingMail.Attach_Queue,
-                        AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
-                        EmailFrom = itemfiltertrackingMail.EmailFrom,
-                        EmailTracking = true,  // Marcar como correo a ser trackeado
-                        EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay
-                    };
-                    dbmTools.SchemaMail.TBL_Queue.DBInsert(dataTBLQueueType);
-
-
-                    // Actualizamos estado y fecha de envío en TBL_Tracking_Mail
-                    var dataTBLTrackingMail = new DBTools.SchemaMail.TBL_Tracking_MailType
-                    {
-                        fk_Queue = guidQueue,
-                        fk_Entidad = itemfiltertrackingMail.fk_Entidad,
-                        fk_Proyecto = itemfiltertrackingMail.fk_Proyecto,
-                        fk_Expediente = itemfiltertrackingMail.fk_Expediente,
-                        fk_Folder = itemfiltertrackingMail.fk_Folder,
-                        fk_File = itemfiltertrackingMail.fk_File,
-                        fk_Usuario = itemfiltertrackingMail.fk_Usuario,
-                        Fecha_Log = itemfiltertrackingMail.Fecha_Log,
-                        EmailAddress_Queue = itemfiltertrackingMail.EmailAddress_Queue,
-                        CC_Queue = itemfiltertrackingMail.CC_Queue,
-                        CCO_Queue = itemfiltertrackingMail.CCO_Queue,
-                        Subject_Queue = itemfiltertrackingMail.Subject_Queue,
-                        Message_Queue = itemfiltertrackingMail.Message_Queue,
-                        Attach_Queue = itemfiltertrackingMail.Attach_Queue,
-                        AttachName_Queue = itemfiltertrackingMail.AttachName_Queue,
-                        EmailFrom = itemfiltertrackingMail.EmailFrom,
-                        EmailFromDisplay = itemfiltertrackingMail.EmailFromDisplay,
-                        Fecha_Envio = currentDate,
-                        fk_Estado_Correo = 2,
-                        Detalle_Envio = itemfiltertrackingMail.Detalle_Envio,
-                        IsActive = itemfiltertrackingMail.IsActive
-                    };
-                    dbmTools.SchemaMail.TBL_Tracking_Mail.DBUpdate(dataTBLTrackingMail, itemfiltertrackingMail.id_Tracking_Mail);
+                    dbmTools.SchemaMail.PA_Insert_Queue.DBExecute(itemfiltertrackingMail.id_Tracking_Mail, currentDate, itemfiltertrackingMail.EmailAddress_Queue);
 
                     return currentDate;
                 }

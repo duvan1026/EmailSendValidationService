@@ -175,6 +175,7 @@
     <Compile Include="Config\ServiceConfig.cs" />
     <Compile Include="Converters\EmailHtmlBuilder.cs" />
     <Compile Include="Converters\HtmlToTiffConverter.cs" />
+    <Compile Include="GenerarCartas\GenerarAcuseRecibido.cs" />
     <Compile Include="GenerarCartas\GenerarImagenEmail.cs" />
     <Compile Include="Log\Logs.cs" />
     <Compile Include="Models\ThreadsParameters.cs" />

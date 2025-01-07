@@ -30,6 +30,7 @@ using ServiceEmailSendValidation.GenerarCartas;
 using Slyg.Data.Schemas;
 using PuppeteerSharp;
 using ServiceEmailSendValidation.Models;
+using ImageMagick;
 
 namespace EmailSendValidationService
 {
@@ -132,8 +133,9 @@ namespace EmailSendValidationService
                 {
                     try
                     {
-                        short EmailScheduledStatus = 1;   // To Do: Cambiar por el estado
-                        DBTools.SchemaMail.TBL_Tracking_MailDataTable trakingMailTable = LoadEmailScheduledStatus(EmailScheduledStatus);
+                        short EmailScheduledStatus = (short)DBTools.EnumEstadosCorreos.Programado;   
+                        short EmailDeliveredToCarrierStatus = (short)DBTools.EnumEstadosCorreos.ProgramadoTransportadora;
+                        DBTools.SchemaMail.TBL_Tracking_MailDataTable trakingMailTable = LoadEmailScheduledStatus(EmailScheduledStatus, EmailDeliveredToCarrierStatus);
 
                         if (trakingMailTable.Count > 0)
                         {
@@ -318,9 +320,17 @@ namespace EmailSendValidationService
 
                 fk_expediente = parameters1.fk_Expediente.ToString();
 
-                GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
-                generarImagenEmail.GenerarCartas(parameters1,ref _browser);
-
+                switch (parameters1.fk_Estado_Correo)
+                {
+                    case (short)DBTools.EnumEstadosCorreos.Programado:
+                        GenerarImagenEmail generarImagenEmail = new GenerarImagenEmail(dataLog);
+                        generarImagenEmail.GenerarCartas(parameters1, ref _browser);
+                        break;
+                    case (short)DBTools.EnumEstadosCorreos.ProgramadoTransportadora:
+                        GenerarAcuseRecibido generarAcuseRecibido = new GenerarAcuseRecibido(dataLog);
+                        generarAcuseRecibido.GenerarAcuse(parameters1);
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -330,7 +340,7 @@ namespace EmailSendValidationService
             }
         }
 
-        private DBTools.SchemaMail.TBL_Tracking_MailDataTable  LoadEmailScheduledStatus(short _OCRCaptureState)
+        private DBTools.SchemaMail.TBL_Tracking_MailDataTable  LoadEmailScheduledStatus(short _EmailScheduledStatus,short _EmailDeliveredToCarrierStatus)
         {
             DBTools.DBToolsDataBaseManager dbmTools = null;
 
@@ -339,10 +349,22 @@ namespace EmailSendValidationService
                 dbmTools = new DBTools.DBToolsDataBaseManager(Program.ConnectionStrings.Tools);
                 dbmTools.Connection_Open();
 
-                // Procede a extraer los registros 
-                var trackingMailTable = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Estado_Correo(_OCRCaptureState);
+                string Status = _EmailScheduledStatus.ToString() + ',' + _EmailDeliveredToCarrierStatus.ToString();
 
-                return trackingMailTable;
+                var trackingMailTableScheduled = dbmTools.SchemaProcess.PA_Get_Tracking_Mail_x_Estados.DBExecute(Status);
+
+
+                //// Procede a extraer los registros 
+                //var trackingMailTableScheduled = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Estado_Correo(_EmailScheduledStatus);
+                //var trackingMailTableDeliveredToCarrier = dbmTools.SchemaMail.TBL_Tracking_Mail.DBFindByfk_Estado_Correo(_EmailDeliveredToCarrierStatus);
+
+                //// Combinar ambos resultados
+                //if (trackingMailTableDeliveredToCarrier.Rows.Count > 0)
+                //{
+                //    trackingMailTableScheduled.Merge(trackingMailTableDeliveredToCarrier);
+                //}
+
+                return trackingMailTableScheduled;
             }
             catch
             {

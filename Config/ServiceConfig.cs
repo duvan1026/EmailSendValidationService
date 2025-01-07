@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -197,7 +198,7 @@ namespace EmailSendValidationService.Config
                 dbmTools = new DBTools.DBToolsDataBaseManager(Program.ConnectionStrings.Tools);
                 dbmTools.Connection_Open();
 
-                DBTools.SchemaConfig.TBL_Parametro_SistemaDataTable parametersDataTable = dbmTools.SchemaConfig.TBL_Parametro_Sistema.DBGet(null);
+                DBTools.SchemaConfig.TBL_Parametro_SistemaDataTable parametersDataTable = dbmTools.SchemaConfig.TBL_Parametro_Sistema.DBFindByfk_Entidadfk_Proyecto(0, 0);
 
                 return parametersDataTable;
             }
