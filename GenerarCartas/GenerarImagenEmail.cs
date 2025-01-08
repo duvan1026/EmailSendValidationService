@@ -199,123 +199,119 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                             short maxIdFile = dtFile.Max(file => file.id_File);
                                             fileImageEmail = (short)(maxIdFile + 1);
 
-                                            //// Evalua el ultimo folio de ese expediente folder para almacenar la evidencia del correo
-                                            //// cambiar nombre por file.
-                                            //short lastFolio = EvaluateFolio(ref manager, itemfiltertrackingMail, fileImageEmail);
-                                            //fileImageEmail = (short)(lastFolio + 1);
+                                            var expedienteImageEmail = itemfiltertrackingMail.fk_Expediente;
+                                            var folderImageEmail = itemfiltertrackingMail.fk_Folder;
 
-                                            for (int folio = 1; folio <= (foliosImageEmail + _ImageCount); folio++)
+                                            try
                                             {
-                                                byte[] dataImage = null;
-                                                byte[] dataImageThumbnail = null;
 
-                                                if (folio <= foliosImageEmail)
+                                                for (int folio = 1; folio <= (foliosImageEmail + _ImageCount); folio++)
                                                 {
-                                                    dataImage = ImageManager.GetFolioData(fileName, folio, formato, compresion);
-                                                    dataImageThumbnail = ImageManager.GetThumbnailData(fileName, folio, folio, MaxThumbnailWidth, MaxThumbnailHeight)[0];
-                                                }
-                                                else
-                                                {
-                                                    short currentFolio = (short)(folio - foliosImageEmail);
-                                                    manager.GetFolio(itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, (short)itemfiltertrackingMail.fk_File, _FileImagingRow.id_Version, currentFolio, ref dataImage, ref dataImageThumbnail);
-                                                }
+                                                    byte[] dataImage = null;
+                                                    byte[] dataImageThumbnail = null;
 
-                                                // Debug - muestra las imagenes para almacenar en el nuevo file
-                                                //string FileName2 = fullPath + identifier + "_" + folio.ToString() + ".tif";
-                                                //using (var fs = new FileStream(FileName2, FileMode.Create))
-                                                //{
-                                                //    fs.Write(dataImage, 0, dataImage.Length);
-                                                //    fs.Close();
-                                                //}//////////////////////////////////////////
-
-                                                //// Verifica que exista el file para proceder a actualizarlo o insertarlo
-                                                //bool existFolio = ExistFolio(ref manager, itemfiltertrackingMail, fileImageEmail, (short)folio);
-
-                                                if (folio == 1)
-                                                {
-                                                    Guid guidImage = Guid.NewGuid();
-
-                                                    var fileImgType = new DBCore.SchemaImaging.TBL_FileType();
-                                                    fileImgType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
-                                                    fileImgType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
-                                                    fileImgType.fk_File = fileImageEmail;
-                                                    fileImgType.id_Version = 1;
-                                                    fileImgType.File_Unique_Identifier = guidImage;
-                                                    fileImgType.Folios_Documento_File = (short)(foliosImageEmail + _ImageCount);
-                                                    fileImgType.Tamaño_Imagen_File = 0;
-                                                    fileImgType.Nombre_Imagen_File = "";
-                                                    fileImgType.Key_Cargue_Item = "";
-                                                    fileImgType.Save_FileName = "";
-                                                    fileImgType.fk_Content_Type = Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida;
-                                                    fileImgType.fk_Usuario_Log = Program.Config.usuario_log;
-                                                    fileImgType.Validaciones_Opcionales = false;
-                                                    fileImgType.Es_Anexo = false;
-                                                    fileImgType.fk_Anexo = null;
-                                                    fileImgType.fk_Entidad_Servidor = firstRowOTData.fk_Entidad_Servidor;
-                                                    fileImgType.fk_Servidor = firstRowOTData.fk_Servidor;
-                                                    fileImgType.Fecha_Creacion = SlygNullable.SysDate;
-                                                    fileImgType.Fecha_Transferencia = null;
-                                                    fileImgType.En_Transferencia = false;
-                                                    fileImgType.fk_Entidad_Servidor_Transferencia = null;
-                                                    fileImgType.fk_Servidor_Transferencia = null;
-
-                                                    var fileProcesType = new DBCore.SchemaProcess.TBL_FileType();
-                                                    fileProcesType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
-                                                    fileProcesType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
-                                                    fileProcesType.id_File = fileImageEmail;
-                                                    fileProcesType.File_Unique_Identifier = guidImage;
-                                                    fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
-                                                    fileProcesType.Folios_File = ((SlygNullable<short>)(foliosImageEmail + _ImageCount));
-                                                    fileProcesType.Monto_File = 0;
-                                                    fileProcesType.CBarras_File = itemfiltertrackingMail.fk_Expediente.ToString() + itemfiltertrackingMail.fk_Folder.ToString() + fileImageEmail;
-
-                                                    var FileEstadoType = new DBCore.SchemaProcess.TBL_File_EstadoType();
-                                                    FileEstadoType.fk_Expediente = itemfiltertrackingMail.fk_Expediente;
-                                                    FileEstadoType.fk_Folder = (short)itemfiltertrackingMail.fk_Folder;
-                                                    FileEstadoType.fk_File = fileImageEmail;
-                                                    FileEstadoType.Modulo = new Slyg.Tools.SlygNullable<byte>((byte)ServiceConfig.Modulo.Imaging);
-                                                    FileEstadoType.fk_Estado = 38;  // estado Indexado 
-                                                    FileEstadoType.fk_Usuario = Program.Config.usuario_log;
-                                                    FileEstadoType.Fecha_Log = DateTime.Now;
-
-                                                    lock (_lockObject)
+                                                    if (folio <= foliosImageEmail)
                                                     {
-                                                        manager.CreateItem((long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida, identifier);
-                                                        dbmCore.SchemaImaging.TBL_File.DBInsert(fileImgType);
-                                                        dbmCore.SchemaProcess.TBL_File.DBInsert(fileProcesType);
-                                                        dbmCore.SchemaProcess.TBL_File_Estado.DBInsert(FileEstadoType);
-
-                                                        /*
-                                                        // Validar que exista el file para proceder a actualizarlo o insertarlo                                                      
-                                                        if (existFolio)
-                                                        {
-                                                            dbmCore.SchemaImaging.TBL_File.DBUpdate(fileImgType, (long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail, 1);
-                                                            dbmCore.SchemaProcess.TBL_File.DBUpdate(fileProcesType, (long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail);
-                                                            dbmCore.SchemaProcess.TBL_File_Estado.DBUpdate(FileEstadoType, (long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail, FileEstadoType.Modulo);
-                                                        }
-                                                        else
-                                                        {                                                        
-                                                            manager.CreateItem((long)itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida, identifier);
-                                                            dbmCore.SchemaImaging.TBL_File.DBInsert(fileImgType);
-                                                            dbmCore.SchemaProcess.TBL_File.DBInsert(fileProcesType);
-                                                            dbmCore.SchemaProcess.TBL_File_Estado.DBInsert(FileEstadoType);
-                                                        }*/
-                                                    }
-                                                }
-
-                                                lock (_lockObject)
-                                                {
-                                                    manager.CreateFolio((long)itemfiltertrackingMail.fk_Expediente, (short)itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
-                                                    /*
-                                                    // Validar que exista el file para proceder a actualizarlo o insertarlo                                                    
-                                                    if (existFolio)
-                                                    {
-                                                        manager.UpdateFolio((long)itemfiltertrackingMail.fk_Expediente, (short)itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail);
+                                                        dataImage = ImageManager.GetFolioData(fileName, folio, formato, compresion);
+                                                        dataImageThumbnail = ImageManager.GetThumbnailData(fileName, folio, folio, MaxThumbnailWidth, MaxThumbnailHeight)[0];
                                                     }
                                                     else
                                                     {
-                                                        manager.CreateFolio((long)itemfiltertrackingMail.fk_Expediente, (short)itemfiltertrackingMail.fk_Folder, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
-                                                    }*/
+                                                        short currentFolio = (short)(folio - foliosImageEmail);
+                                                        manager.GetFolio(expedienteImageEmail, folderImageEmail, (short)itemfiltertrackingMail.fk_File, _FileImagingRow.id_Version, currentFolio, ref dataImage, ref dataImageThumbnail);
+                                                    }
+
+                                                    // Debug - muestra las imagenes para almacenar en el nuevo file
+                                                    //string FileName2 = fullPath + identifier + "_" + folio.ToString() + ".tif";
+                                                    //using (var fs = new FileStream(FileName2, FileMode.Create))
+                                                    //{
+                                                    //    fs.Write(dataImage, 0, dataImage.Length);
+                                                    //    fs.Close();
+                                                    //}//////////////////////////////////////////
+
+                                                    if (folio == 1)
+                                                    {
+                                                        Guid guidImage = Guid.NewGuid();
+
+                                                        var fileImgType = new DBCore.SchemaImaging.TBL_FileType();
+                                                        fileImgType.fk_Expediente = expedienteImageEmail;
+                                                        fileImgType.fk_Folder = (short)folderImageEmail;
+                                                        fileImgType.fk_File = fileImageEmail;
+                                                        fileImgType.id_Version = 1;
+                                                        fileImgType.File_Unique_Identifier = guidImage;
+                                                        fileImgType.Folios_Documento_File = (short)(foliosImageEmail + _ImageCount);
+                                                        fileImgType.Tamaño_Imagen_File = 0;
+                                                        fileImgType.Nombre_Imagen_File = "";
+                                                        fileImgType.Key_Cargue_Item = "";
+                                                        fileImgType.Save_FileName = "";
+                                                        fileImgType.fk_Content_Type = Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida;
+                                                        fileImgType.fk_Usuario_Log = Program.Config.usuario_log;
+                                                        fileImgType.Validaciones_Opcionales = false;
+                                                        fileImgType.Es_Anexo = false;
+                                                        fileImgType.fk_Anexo = null;
+                                                        fileImgType.fk_Entidad_Servidor = firstRowOTData.fk_Entidad_Servidor;
+                                                        fileImgType.fk_Servidor = firstRowOTData.fk_Servidor;
+                                                        fileImgType.Fecha_Creacion = SlygNullable.SysDate;
+                                                        fileImgType.Fecha_Transferencia = null;
+                                                        fileImgType.En_Transferencia = false;
+                                                        fileImgType.fk_Entidad_Servidor_Transferencia = null;
+                                                        fileImgType.fk_Servidor_Transferencia = null;
+
+                                                        var fileProcesType = new DBCore.SchemaProcess.TBL_FileType();
+                                                        fileProcesType.fk_Expediente = expedienteImageEmail;
+                                                        fileProcesType.fk_Folder = (short)folderImageEmail;
+                                                        fileProcesType.id_File = fileImageEmail;
+                                                        fileProcesType.File_Unique_Identifier = guidImage;
+                                                        fileProcesType.fk_Documento = dtDocumentoImaginRow.id_Documento_Correo_Evidencia;
+                                                        fileProcesType.Folios_File = ((SlygNullable<short>)(foliosImageEmail + _ImageCount));
+                                                        fileProcesType.Monto_File = 0;
+                                                        fileProcesType.CBarras_File = expedienteImageEmail.ToString() + folderImageEmail.ToString() + fileImageEmail;
+
+                                                        var FileEstadoType = new DBCore.SchemaProcess.TBL_File_EstadoType();
+                                                        FileEstadoType.fk_Expediente = expedienteImageEmail;
+                                                        FileEstadoType.fk_Folder = (short)folderImageEmail;
+                                                        FileEstadoType.fk_File = fileImageEmail;
+                                                        FileEstadoType.Modulo = new Slyg.Tools.SlygNullable<byte>((byte)ServiceConfig.Modulo.Imaging);
+                                                        FileEstadoType.fk_Estado = 38;  // estado Indexado 
+                                                        FileEstadoType.fk_Usuario = Program.Config.usuario_log;
+                                                        FileEstadoType.Fecha_Log = DateTime.Now;
+
+                                                        lock (_lockObject)
+                                                        {
+                                                            dbmCore.SchemaProcess.TBL_File.DBInsert(fileProcesType);
+                                                            dbmCore.SchemaProcess.TBL_File_Estado.DBInsert(FileEstadoType);
+                                                            dbmCore.SchemaImaging.TBL_File.DBInsert(fileImgType);
+                                                            manager.CreateItem((long)expedienteImageEmail, folderImageEmail, fileImageEmail, 1, Program.ProyectoImagingRow.Extension_Formato_Imagen_Salida, identifier);
+                                                        }
+                                                    }
+
+                                                    lock (_lockObject)
+                                                    {
+                                                        manager.CreateFolio((long)expedienteImageEmail, (short)folderImageEmail, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
+                                                    }
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                lock (_lockObject)
+                                                {
+                                                    // eliminamos si existe el registro
+                                                    var dataTableProcessFile = dbmCore.SchemaProcess.TBL_File.DBGet(expedienteImageEmail, folderImageEmail, fileImageEmail);
+                                                    if (dataTableProcessFile != null && dataTableProcessFile.Count > 0)
+                                                    {
+                                                        dbmCore.SchemaProcess.TBL_File.DBDelete(expedienteImageEmail, folderImageEmail, fileImageEmail);
+                                                    }
+
+                                                    // eliminamos si existe el registro
+                                                    var dataTableImagingFile = dbmCore.SchemaImaging.TBL_File.DBGet(expedienteImageEmail, folderImageEmail, fileImageEmail, 1);
+                                                    if (dataTableImagingFile != null && dataTableImagingFile.Count > 0)
+                                                    {
+                                                        dbmCore.SchemaImaging.TBL_File.DBDelete(expedienteImageEmail, folderImageEmail, fileImageEmail, dataTableImagingFile[0].id_Version);
+                                                    }
+
+                                                    // Borrar los folios
+                                                    manager.DeleteItem(expedienteImageEmail, folderImageEmail, fileImageEmail, 1);
+                                                    throw;
                                                 }
                                             }
                                         }                                        
