@@ -188,6 +188,10 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                         if(dtDocumentoImagin != null && dtDocumentoImagin.Count > 0)
                                         {
                                             var dtDocumentoImaginRow = dtDocumentoImagin[0];
+                                            if (dtDocumentoImaginRow.id_Documento_Correo_Evidencia == 0)
+                                            {
+                                                throw new InvalidOperationException("El valor de id_Documento_Correo_Evidencia es 0 para el documento con ID: " + _FileProcessRow.fk_Documento.ToString() + ". Este valor no es válido. Por favor, configure un valor válido.");
+                                            }
 
                                             var formato = Utilities.GetEnumFormat(Program.ProyectoImagingRow.id_Formato_Imagen_Entrada.ToString());
                                             var compresion = Utilities.GetEnumCompression((DesktopConfig.FormatoImagenEnum)Program.ProyectoImagingRow.id_Formato_Imagen_Salida);
