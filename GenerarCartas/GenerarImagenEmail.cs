@@ -98,38 +98,13 @@ namespace ServiceEmailSendValidation.GenerarCartas
                         if (OTDataTable.Count > 0)
                         {
                             var firstRowOTData = filterOTDataTable[0];
-                            var NotificacionRow = GetSeguimientoCorreoRow(firstRowOTData, itemfiltertrackingMail);
-
-                            if (NotificacionRow != null)
-                            {
-                                int TipoNotificacion = (int)NotificacionRow["TipoNotificacion"];
-                                var NotificacionParametrosDataTable = new DBCore.SchemaProcess.CTA_Notificacion_ParametrosDataTable();
-
-                                lock (_lockObject)
-                                {
-                                    NotificacionParametrosDataTable = dbmCore.SchemaProcess.PA_Notificacion_Parametros.DBExecute(itemfiltertrackingMail.fk_Expediente, itemfiltertrackingMail.fk_Folder, (SlygNullable<short>)(itemfiltertrackingMail.fk_File - 1), TipoNotificacion);
-                                }
-
-                                foreach (var tblNotificacionParametroRow in NotificacionParametrosDataTable)
-                                {
-                                    switch (tblNotificacionParametroRow.fk_Parametro_tipo)
-                                    {
-                                        case 1:  // Subject
-                                            itemfiltertrackingMail.Subject_Queue = itemfiltertrackingMail.Subject_Queue.Replace(tblNotificacionParametroRow.Parametro, tblNotificacionParametroRow.Valor_Parametro).Replace("<b>", "").Replace("</b>", "");
-                                            break;
-                                        case 2:  // Message
-                                            itemfiltertrackingMail.Message_Queue = itemfiltertrackingMail.Message_Queue.Replace(tblNotificacionParametroRow.Parametro, tblNotificacionParametroRow.Valor_Parametro);
-                                            break;
-                                    }
-                                }
-                            }                                                   
 
                             // Asigna valores por defecto si es necesario por valores NULL
                             itemfiltertrackingMail = AssignDefaultValuesWhenNull(itemfiltertrackingMail);
 
                             // Actualiza data en TBL_queue y TBL_TrackingMail para enviar correo
-                            var sendEmailDate = ProcessEmailQueueAndUpdateTracking(itemfiltertrackingMail);
-                            //var sendEmailDate = DateTime.Now;
+                            //var sendEmailDate = ProcessEmailQueueAndUpdateTracking(itemfiltertrackingMail);
+                            var sendEmailDate = DateTime.Now;
 
                             // Construcción de rutas de archivo
                             string fullPath = Path.Combine(Program.AppPath, Program.TempPath);
@@ -294,6 +269,9 @@ namespace ServiceEmailSendValidation.GenerarCartas
                                                         manager.CreateFolio((long)expedienteImageEmail, (short)folderImageEmail, fileImageEmail, 1, (short)folio, dataImage, dataImageThumbnail, false);
                                                     }
                                                 }
+
+                                                // Actualiza data en TBL_queue y TBL_TrackingMail para enviar correo
+                                                ProcessEmailQueueAndUpdateTracking(itemfiltertrackingMail, sendEmailDate);
                                             }
                                             catch
                                             {
@@ -539,6 +517,32 @@ namespace ServiceEmailSendValidation.GenerarCartas
         }
 
 
+        public void ProcessEmailQueueAndUpdateTracking(DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail, DateTime currentDate)
+        {
+            lock (_lockObject)
+            {
+                DBToolsDataBaseManager dbmTools = null;
+
+                try
+                {
+                    dbmTools = new DBTools.DBToolsDataBaseManager(Program.ConnectionStrings.Tools);
+                    dbmTools.Connection_Open();
+
+                    dbmTools.SchemaMail.PA_Insert_Queue.DBExecute(itemfiltertrackingMail.id_Tracking_Mail, currentDate, itemfiltertrackingMail.EmailAddress_Queue);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    if ((dbmTools != null))
+                        dbmTools.Connection_Close();
+                }
+            }
+        }
+
+        /*
         public DateTime ProcessEmailQueueAndUpdateTracking(DBTools.SchemaMail.TBL_Tracking_MailRow itemfiltertrackingMail)
         {
             lock (_lockObject)
@@ -565,7 +569,7 @@ namespace ServiceEmailSendValidation.GenerarCartas
                         dbmTools.Connection_Close();
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Obtiene el numero de folios de un file
