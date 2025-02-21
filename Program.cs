@@ -1,4 +1,5 @@
-﻿using EmailSendValidationService.Config;
+﻿using DBImaging.SchemaCore;
+using EmailSendValidationService.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,8 @@ namespace EmailSendValidationService
         public static ServiceConfig.TypeConnectionString ConnectionStrings;
         public static ServiceConfig.TypeParametersString ConnectionParameterSystemStrings;
         public static DBImaging.SchemaConfig.CTA_ProyectoSimpleType ProyectoImagingRow = new DBImaging.SchemaConfig.CTA_ProyectoSimpleType();
-
+        public static DBImaging.SchemaCore.CTA_ServidorSimpleType ServidorImageRow = new DBImaging.SchemaCore.CTA_ServidorSimpleType();
+        public static DBImaging.SchemaSecurity.CTA_Centro_ProcesamientoSimpleType CentroImageRow = new DBImaging.SchemaSecurity.CTA_Centro_ProcesamientoSimpleType();
         #endregion
 
         #region " Propiedades "
@@ -59,6 +61,7 @@ namespace EmailSendValidationService
                 return _SystemLogPath;
             }
         }
+
 
 
 

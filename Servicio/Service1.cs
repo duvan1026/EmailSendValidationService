@@ -142,7 +142,6 @@ namespace EmailSendValidationService
                             // Traer Parametros del sistema
                             Program.ConnectionParameterSystemStrings = Program.Config.GetParametersSystem();
 
-                            //////////////////////////////////////////////////////////////////////////
                             DBTools.SchemaMail.TBL_Tracking_MailDataTable distinctTrakingMailTable = new DBTools.SchemaMail.TBL_Tracking_MailDataTable();
 
                             // Obtener los valores distintos de fk_Entidad y fk_Proyecto y los almacena en distinctTrakingMailTable
@@ -161,6 +160,9 @@ namespace EmailSendValidationService
                             //Traer la consulta de las tablas que se puedan por las diferentes fk_Entidad y fk_proyecto.
                             foreach (var item in distinctTrakingMailTable)
                             {
+                                // Setea las variables globales del proyecto y, del servidor y centro para almacenar las imagenes
+                                SetServerCentroImagingProyecto(item);
+
                                 // Validar por entidad y proyecto si se encuentra en dia habil.
                                 if (ValidationIsTimeInOperatingHours(item.fk_Entidad, item.fk_Proyecto))
                                 {
@@ -182,6 +184,7 @@ namespace EmailSendValidationService
                                             .Cast<DataRow>()
                                             .ToList()
                                             .ForEach(row => filtertrackingMail.ImportRow(row));    // almacena cada fila en una fila de distinctDashboardCapturasTable
+
 
                                         ProcesadorHilos procesadorHilosInstance = new ProcesadorHilos();
                                         procesadorHilosInstance.servicio = this;
@@ -239,6 +242,70 @@ namespace EmailSendValidationService
             catch (Exception ex)
             {
                 dataLog.AddErrorEntry("**TERMINACIÓN HILO PRINCIPAL**: Se ha producido un error durante la ejecución del hilo principal del servicio. Detalles del error: " + ex.ToString());
+            }
+        }
+
+        private void SetServerCentroImagingProyecto(DBTools.SchemaMail.TBL_Tracking_MailRow distinctTrakingMailRow)
+        {
+            DBSecurity.DBSecurityDataBaseManager dbmSecurity = null;
+            DBCore.DBCoreDataBaseManager dbmCore = null;
+            DBImaging.DBImagingDataBaseManager dbmImaging = null;
+
+            Program.ServidorImageRow = null;
+            Program.CentroImageRow = null;
+            Program.ProyectoImagingRow = null;
+
+            try
+            {
+                dbmSecurity = new DBSecurity.DBSecurityDataBaseManager(Program.ConnectionStrings.Security);
+                dbmCore = new DBCore.DBCoreDataBaseManager(Program.ConnectionStrings.Core);
+                dbmImaging = new DBImaging.DBImagingDataBaseManager(Program.ConnectionStrings.Imaging);
+                
+                dbmImaging.Connection_Open(Program.Config.usuario_log);
+                dbmCore.Connection_Open(Program.Config.usuario_log);
+                dbmSecurity.Connection_Open(Program.Config.usuario_log);
+
+                var dtServicioEntidadServidor = dbmSecurity.SchemaImaging.CTA_Servicio_Entidad_Servidor_Centro_procesamiento.DBFindByfk_Proyectofk_EntidadNombre_Servicio(distinctTrakingMailRow.fk_Proyecto, distinctTrakingMailRow.fk_Entidad, Program.Config.NameService);
+                if (dtServicioEntidadServidor == null || dtServicioEntidadServidor.Count == 0)
+                {
+                    throw new ArgumentException($"No se pudo obtener la configuracion de la Entidad:{distinctTrakingMailRow.fk_Entidad}, Proyecto:{distinctTrakingMailRow.fk_Proyecto} para obtener el servidor y centro de procesamiento. proceda a realizar la configuracion pertinente en dbmSecurity.SchemaImaging.CTA_Servicio_Entidad_Servidor_Centro_procesamiento.");
+                }
+                var servicioServidorProcesamiento = dtServicioEntidadServidor[0];
+
+                var _ServidorTable = dbmImaging.SchemaCore.CTA_Servidor.DBFindByfk_Entidadid_Servidor(servicioServidorProcesamiento.fk_Entidad_Servidor, servicioServidorProcesamiento.fk_Servidor);
+                if(_ServidorTable == null || _ServidorTable.Count == 0)
+                {
+                    throw new ArgumentException($"No se pudo obtener el servidor de la Entidad:{servicioServidorProcesamiento.fk_Entidad_Servidor}, Servidor:{servicioServidorProcesamiento.fk_Servidor}. proceda a realizar la configuracion pertinente en dbmImaging.SchemaCore.CTA_Servidor.");
+                }
+
+                Program.ServidorImageRow = _ServidorTable[0].ToCTA_ServidorSimpleType();
+
+                var _CentroTable = dbmImaging.SchemaSecurity.CTA_Centro_Procesamiento.DBFindByfk_Entidadfk_Sedeid_Centro_Procesamiento(servicioServidorProcesamiento.fk_Entidad_Centro_Procesamiento, servicioServidorProcesamiento.fk_Sede_Centro_Procesamiento,servicioServidorProcesamiento.fk_Centro_Procesamiento);
+                if (_CentroTable == null || _CentroTable.Count == 0)
+                {
+                    throw new ArgumentException($"No se pudo obtener el Centro de procesamiento de la Entidad:{servicioServidorProcesamiento.fk_Entidad_Centro_Procesamiento}, Sede:{servicioServidorProcesamiento.fk_Sede_Centro_Procesamiento}, Centro:{servicioServidorProcesamiento.fk_Centro_Procesamiento}. proceda a realizar la configuracion pertinente en dbmImaging.SchemaCore.CTA_Servidor.");
+                }
+
+                Program.CentroImageRow = _CentroTable[0].ToCTA_Centro_ProcesamientoSimpleType();
+
+                var dtProyecto = dbmImaging.SchemaConfig.CTA_Proyecto.DBFindByfk_Entidadfk_Proyecto(distinctTrakingMailRow.fk_Entidad, distinctTrakingMailRow.fk_Proyecto);
+                if (dtProyecto == null || dtProyecto.Count == 0)
+                {
+                    throw new ArgumentException($"No se pudo obtener la configuracion del proyecto de la Entidad:{distinctTrakingMailRow.fk_Entidad}, Proyecto:{distinctTrakingMailRow.fk_Proyecto}. proceda a realizar la configuracion pertinente en dbmImaging.SchemaConfig.CTA_Proyecto.");
+                }
+
+                Program.ProyectoImagingRow = dtProyecto[0].ToCTA_ProyectoSimpleType();
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (dbmImaging != null) dbmImaging.Connection_Close();
+                if (dbmCore != null) dbmCore.Connection_Close();
+                if (dbmSecurity != null) dbmSecurity.Connection_Close();
             }
         }
 

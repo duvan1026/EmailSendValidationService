@@ -100,8 +100,7 @@
     <Reference Include="Miharu.Integration.DataAccess">
       <HintPath>..\Referencias\DLLs\Miharu.Integration.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="Miharu.MailSender.DataAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Miharu.MailSender.DataAccess">
       <HintPath>..\Referencias\DLLs\Miharu.MailSender.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="Miharu.Security.DataAccess">
