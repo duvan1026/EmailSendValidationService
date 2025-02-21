@@ -75,6 +75,8 @@ namespace EmailSendValidationService.Config
         public int Intervalo { get; set; }
         public string ConnectionStringSecurity { get; }
         public string SystemLogPath { get; }
+        
+        public string NameService { get; }
 
         #endregion
 
@@ -87,6 +89,7 @@ namespace EmailSendValidationService.Config
             Intervalo = 5000;
             ConnectionStringSecurity = ConfigurationManager.AppSettings["ConnectionStringSecurity"];
             SystemLogPath = ConfigurationManager.AppSettings["SystemLogPath"];
+            NameService = "EmailSendValidation";
         }
 
         #endregion
